@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TM Arcade V2 | App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syncopate:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css?v=20260217p" />
+  </head>
+  <body data-page="app" class="game-only">
+    <div class="user-tag play-nametag" data-user-name>Player</div>
+    <div class="play-controls" id="app-controls">
+      <a class="pill ghost link-pill play-back" href="index.html">Back to Home</a>
+      <button class="pill ghost" type="button" id="app-open-external">Open Original</button>
+    </div>
+
+    <div class="app-missing hidden" id="app-missing">
+      <h2>App not found</h2>
+      <p>This app may have been deleted. Go back and create a new one.</p>
+      <a class="pill ghost link-pill" href="index.html">Back to Home</a>
+    </div>
+
+    <iframe
+      id="app-frame"
+      class="game-iframe"
+      title="App viewer"
+      allow="fullscreen; autoplay; clipboard-read; clipboard-write"
+    ></iframe>
+
+    <script src="app.js?v=20260217u"></script>
+  </body>
+</html>

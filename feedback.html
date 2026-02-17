@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TM Arcade V2 | Feedback</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syncopate:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css?v=20260217p" />
+  </head>
+  <body data-page="feedback">
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-orb orb-a" aria-hidden="true"></div>
+    <div class="bg-orb orb-b" aria-hidden="true"></div>
+
+    <nav class="top-bar">
+      <div class="top-inner">
+        <div class="brand">TM Arcade V2</div>
+        <div class="top-links">
+          <a class="nav-link" href="index.html" data-i18n="nav_home">Home Screen</a>
+          <a class="nav-link" href="games.html" data-i18n="nav_games">All Games</a>
+          <a class="nav-link" href="favorites.html" data-i18n="nav_favorites">Favorites</a>
+          <a class="nav-link profile-nav-link" href="profile.html" data-i18n="nav_profile">Profile</a>
+          <a class="nav-link friends-nav-link" href="friends.html">🤝 Friends</a>
+          <a class="nav-link leaderboard-nav-link" href="leaderboard.html">🏆 Leaderboard</a>
+          <a class="nav-link message-nav-link" href="messages.html">💬 Messages</a>
+          <a class="nav-link cash-nav-link" href="tmcash.html">💸 TM Cash</a>
+          <a class="nav-link" href="bank.html" data-i18n="nav_bank">Bank</a>
+          <a class="nav-link" href="shop.html" data-i18n="nav_shop">Shop</a>
+          <a class="nav-link feedback-nav-link active" href="feedback.html">📝 Feedback</a>
+          <a class="nav-link" href="settings.html" data-i18n="nav_settings">Settings</a>
+          <a class="nav-link" href="about.html" data-i18n="nav_about">About</a>
+        </div>
+        <div class="user-tag" data-user-name>Player</div>
+        <button class="pill emergency" id="emergency" data-i18n="emergency">Emergency</button>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div class="hero-shell">
+        <div class="hero-label">📝 Feedback Center</div>
+        <h1>Share Feedback</h1>
+        <p>Tell us what feels great and what should improve next.</p>
+        <div class="hero-actions">
+          <button class="pill ghost small" id="feedback-refresh" type="button">Refresh</button>
+          <span class="admin-inline-status" id="feedback-status"></span>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-shell">
+      <section class="feedback-shell">
+        <article class="feedback-user-shell" id="feedback-user-shell">
+          <div class="friends-panel-head">
+            <h2>Send Feedback</h2>
+          </div>
+          <form class="feedback-form" id="feedback-form" novalidate>
+            <div class="feedback-form-grid">
+              <label class="setting-field" for="feedback-name">
+                <span>Name</span>
+                <input class="setting-input" id="feedback-name" type="text" maxlength="40" required />
+              </label>
+              <label class="setting-field" for="feedback-email">
+                <span>Email</span>
+                <input class="setting-input" id="feedback-email" type="email" maxlength="120" required />
+              </label>
+              <label class="setting-field feedback-field-full" for="feedback-phone">
+                <span>Phone (Optional)</span>
+                <input class="setting-input" id="feedback-phone" type="tel" maxlength="30" />
+              </label>
+              <label class="setting-field feedback-field-full" for="feedback-rating">
+                <span>Rating</span>
+                <input id="feedback-rating" type="hidden" />
+                <div class="feedback-stars-input" id="feedback-rating-buttons" role="group" aria-label="Choose rating">
+                  <button class="feedback-star-btn" data-feedback-rating="1" type="button" aria-label="1 star" aria-pressed="false">★</button>
+                  <button class="feedback-star-btn" data-feedback-rating="2" type="button" aria-label="2 stars" aria-pressed="false">★</button>
+                  <button class="feedback-star-btn" data-feedback-rating="3" type="button" aria-label="3 stars" aria-pressed="false">★</button>
+                  <button class="feedback-star-btn" data-feedback-rating="4" type="button" aria-label="4 stars" aria-pressed="false">★</button>
+                  <button class="feedback-star-btn" data-feedback-rating="5" type="button" aria-label="5 stars" aria-pressed="false">★</button>
+                </div>
+                <span class="feedback-rating-value" id="feedback-rating-value">Select rating</span>
+              </label>
+              <label class="setting-field feedback-field-full" for="feedback-message">
+                <span>Feedback</span>
+                <textarea
+                  class="setting-input feedback-message-input"
+                  id="feedback-message"
+                  maxlength="1200"
+                  rows="5"
+                  required
+                ></textarea>
+              </label>
+            </div>
+            <div class="feedback-form-actions">
+              <button class="pill" type="submit">Send Feedback</button>
+            </div>
+          </form>
+        </article>
+
+        <article class="feedback-admin-shell" id="feedback-admin-shell" hidden>
+          <div class="friends-panel-head">
+            <h2>Feedback Inbox</h2>
+            <div class="feedback-admin-head-actions">
+              <select class="setting-input feedback-admin-filter" id="feedback-admin-filter" aria-label="Filter feedback status">
+                <option value="all">All</option>
+                <option value="new">New</option>
+                <option value="reviewed">Reviewed</option>
+                <option value="resolved">Resolved</option>
+              </select>
+              <button class="pill ghost small" id="feedback-admin-refresh" type="button">Refresh</button>
+            </div>
+          </div>
+          <span class="admin-inline-status" id="feedback-admin-status"></span>
+          <div class="feedback-admin-list" id="feedback-admin-list"></div>
+        </article>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span data-i18n="footer_credit">TM Arcade V2 by Ahmad Abu Sammour.</span>
+    </footer>
+
+    <script src="app.js?v=20260217u"></script>
+  </body>
+</html>

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TM Arcade V2 | Custom Game</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syncopate:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css?v=20260217p" />
+  </head>
+  <body data-page="custom-game" class="game-only">
+    <div class="user-tag play-nametag" data-user-name>Player</div>
+    <div class="play-controls" id="custom-game-controls">
+      <a class="pill ghost link-pill play-back" href="games.html">Back to Games</a>
+      <button class="pill ghost" type="button" id="custom-game-open">Open Original</button>
+    </div>
+
+    <iframe
+      id="custom-game-frame"
+      class="game-iframe"
+      title="Game player"
+      allow="fullscreen; autoplay; clipboard-read; clipboard-write"
+    ></iframe>
+
+    <script src="app.js?v=20260217u"></script>
+  </body>
+</html>

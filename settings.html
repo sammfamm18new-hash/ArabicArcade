@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title data-i18n-title="title_settings">TM Arcade V2 by Ahmad Abu Sammour | Settings</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syncopate:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css?v=20260217p" />
+  </head>
+  <body data-page="settings">
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-orb orb-a" aria-hidden="true"></div>
+    <div class="bg-orb orb-b" aria-hidden="true"></div>
+
+    <nav class="top-bar">
+      <div class="top-inner">
+        <div class="brand">TM Arcade V2</div>
+        <div class="top-links">
+          <a class="nav-link" href="index.html" data-i18n="nav_home">Home Screen</a>
+          <a class="nav-link" href="games.html" data-i18n="nav_games">All Games</a>
+          <a class="nav-link" href="favorites.html" data-i18n="nav_favorites">Favorites</a>
+          <a class="nav-link" href="bank.html" data-i18n="nav_bank">Bank</a>
+          <a class="nav-link" href="shop.html" data-i18n="nav_shop">Shop</a>
+          <a class="nav-link active" href="settings.html" data-i18n="nav_settings">Settings</a>
+          <a class="nav-link" href="about.html" data-i18n="nav_about">About</a>
+        </div>
+        <div class="user-tag" data-user-name>Player</div>
+        <button class="pill emergency" id="emergency" data-i18n="emergency">Emergency</button>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div class="hero-shell">
+        <div class="hero-label" data-i18n="settings_label">Settings</div>
+        <h1 data-i18n="settings_title">Settings</h1>
+        <p data-i18n="settings_desc">Fine‑tune the look and feel of TM Arcade.</p>
+        <div class="hero-actions">
+          <a class="pill ghost link-pill" href="index.html" data-i18n="back_home">Back to Home</a>
+          <a class="pill ghost link-pill" href="games.html" data-i18n="nav_games">All Games</a>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <span class="stat-label" data-i18n="theme_label">Theme</span>
+            <span class="stat-value" id="theme-status">Dark</span>
+          </div>
+          <div>
+            <span class="stat-label" data-i18n="accent_label">Accent</span>
+            <span class="stat-value" id="accent-status">Neon</span>
+          </div>
+          <div>
+            <span class="stat-label" data-i18n="density_label">Density</span>
+            <span class="stat-value" id="density-status">Comfort</span>
+          </div>
+          <div>
+            <span class="stat-label" data-i18n="motion_label">Motion</span>
+            <span class="stat-value" id="motion-status">Full</span>
+          </div>
+          <div>
+            <span class="stat-label" data-i18n="favorites_label_stat">Favorites</span>
+            <span class="stat-value" id="favorites-count">0</span>
+          </div>
+          <div>
+            <span class="stat-label" data-i18n="ambient_label">Ambient</span>
+            <span class="stat-value" id="ambient-status">On</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-shell">
+      <div class="section-header">
+        <h2 data-i18n="personalize_title">Personalize</h2>
+        <p data-i18n="personalize_desc">Pick a vibe, tune performance, and reorder your home screen.</p>
+      </div>
+      <section class="system-panel" aria-label="Settings">
+        <div class="system-card">
+          <h3 data-i18n="profile_title">Profile</h3>
+          <p class="setting-help" data-i18n="profile_help">Set the name shown across the site.</p>
+          <label class="setting-field">
+            <span data-i18n="display_name">Display name</span>
+            <input
+              class="setting-input"
+              id="user-name-input"
+              type="text"
+              data-i18n-placeholder="display_name_placeholder"
+              placeholder="e.g. John"
+              maxlength="18"
+              autocomplete="off"
+            />
+          </label>
+          <label class="setting-field">
+            <span data-i18n="confirm_name">Confirm name</span>
+            <input
+              class="setting-input"
+              id="user-name-confirm"
+              type="text"
+              data-i18n-placeholder="confirm_name_placeholder"
+              placeholder="Re-enter name"
+              maxlength="18"
+              autocomplete="off"
+            />
+          </label>
+          <div class="setting-row">
+            <button class="pill" type="button" id="save-username" data-i18n="save_username">
+              Save Username
+            </button>
+            <span class="setting-status" id="name-status"></span>
+          </div>
+        </div>
+        <div class="system-card">
+          <h3>Emergency Mode</h3>
+          <p class="setting-help">Choose where the Emergency button opens.</p>
+          <label class="setting-field">
+            <span>Emergency URL</span>
+            <input
+              class="setting-input"
+              id="emergency-url-input"
+              type="url"
+              placeholder="https://classroom.google.com/"
+              autocomplete="off"
+            />
+          </label>
+          <div class="setting-row">
+            <button class="pill" type="button" id="emergency-url-save">Save Link</button>
+            <button class="pill ghost" type="button" id="emergency-url-reset">Reset Default</button>
+          </div>
+          <span class="setting-status" id="emergency-url-status"></span>
+        </div>
+        <div class="system-card">
+          <h3>Offline Download</h3>
+          <p class="setting-help">Download a local copy so it can run from your files.</p>
+          <p class="setting-warning">Warning: offline files do not auto-update. To get new updates, download the latest files again.</p>
+          <div class="setting-row">
+            <button class="pill" type="button" id="download-site-files">Download Site Files</button>
+            <button class="pill ghost" type="button" id="download-core-files">Download Core Only</button>
+          </div>
+          <span class="setting-status" id="download-site-status"></span>
+          <p class="setting-help">After download, open <strong>index.html</strong>. Browser may ask to allow multiple downloads.</p>
+        </div>
+        <div class="system-card">
+          <h3 data-i18n="settings_lock_title">Lock Screen</h3>
+          <p class="setting-help" data-i18n="settings_lock_help">
+            Secure TM Arcade with a local PIN and inactivity auto-lock.
+          </p>
+          <label class="setting-field">
+            <span data-i18n="settings_lock_new_pin">New PIN (4-6 digits)</span>
+            <input
+              class="setting-input"
+              id="lock-pin-new"
+              type="password"
+              inputmode="numeric"
+              pattern="[0-9]*"
+              minlength="4"
+              maxlength="6"
+              placeholder="Enter PIN"
+              data-i18n-placeholder="settings_lock_new_pin_placeholder"
+              autocomplete="new-password"
+            />
+          </label>
+          <label class="setting-field">
+            <span data-i18n="settings_lock_confirm_pin">Confirm PIN</span>
+            <input
+              class="setting-input"
+              id="lock-pin-confirm"
+              type="password"
+              inputmode="numeric"
+              pattern="[0-9]*"
+              minlength="4"
+              maxlength="6"
+              placeholder="Re-enter PIN"
+              data-i18n-placeholder="settings_lock_confirm_pin_placeholder"
+              autocomplete="new-password"
+            />
+          </label>
+          <div class="setting-row">
+            <button class="pill" type="button" id="lock-pin-save" data-i18n="settings_lock_save_pin">Save PIN</button>
+            <button class="pill ghost" type="button" id="lock-password-off" data-i18n="settings_lock_password_off">Turn Password Off</button>
+            <button class="pill ghost" type="button" id="lock-now-btn" data-i18n="settings_lock_now">Lock Now</button>
+          </div>
+          <span class="setting-status" id="lock-pin-status"></span>
+          <div class="lock-settings-divider"></div>
+          <h4 class="lock-widget-heading" data-i18n="settings_lock_recovery_title">Recovery Password</h4>
+          <p class="setting-help" data-i18n="settings_lock_recovery_help">
+            Use this if you forget your lock password. Keep it private.
+          </p>
+          <label class="setting-field">
+            <span data-i18n="settings_lock_recovery_password">Recovery Password</span>
+            <input
+              class="setting-input"
+              id="lock-recovery-password"
+              type="password"
+              minlength="4"
+              maxlength="32"
+              placeholder="Set recovery password"
+              data-i18n-placeholder="settings_lock_recovery_password_placeholder"
+              autocomplete="new-password"
+            />
+          </label>
+          <label class="setting-field">
+            <span data-i18n="settings_lock_recovery_confirm">Confirm Recovery Password</span>
+            <input
+              class="setting-input"
+              id="lock-recovery-confirm"
+              type="password"
+              minlength="4"
+              maxlength="32"
+              placeholder="Confirm recovery password"
+              data-i18n-placeholder="settings_lock_recovery_confirm_placeholder"
+              autocomplete="new-password"
+            />
+          </label>
+          <label class="setting-field">
+            <span data-i18n="settings_lock_recovery_hint">Recovery Hint (optional)</span>
+            <input
+              class="setting-input"
+              id="lock-recovery-hint-input"
+              type="text"
+              maxlength="120"
+              placeholder="Example: favorite team"
+              data-i18n-placeholder="settings_lock_recovery_hint_placeholder"
+              autocomplete="off"
+            />
+          </label>
+          <div class="setting-row">
+            <button class="pill ghost" type="button" id="lock-recovery-save" data-i18n="settings_lock_recovery_save">Save Recovery</button>
+          </div>
+          <span class="setting-status" id="lock-recovery-status"></span>
+          <div class="lock-settings-divider"></div>
+          <div class="setting-row">
+            <button class="setting-toggle" type="button" id="auto-lock-toggle">Auto-lock: Off</button>
+            <label class="setting-field lock-minutes-field">
+              <span data-i18n="settings_lock_minutes">Minutes</span>
+              <input
+                class="setting-input"
+                id="auto-lock-minutes"
+                type="number"
+                min="1"
+                max="240"
+                step="1"
+                value="5"
+              />
+            </label>
+          </div>
+          <span class="setting-status" id="auto-lock-status"></span>
+          <p class="setting-help lock-shortcut-note" data-i18n="settings_lock_shortcut_note">
+            Shortcut: Ctrl/Command + Shift + O locks instantly on Chromebook, Windows, and Mac.
+          </p>
+          <div class="lock-settings-divider"></div>
+          <h4 class="lock-widget-heading" data-i18n="settings_lock_widgets_title">Lock Screen Widgets</h4>
+          <p class="setting-help" data-i18n="settings_lock_widgets_help">
+            Pick what appears on the lock screen dashboard.
+          </p>
+          <div class="lock-widget-options" id="lock-widget-options"></div>
+          <span class="setting-status" id="lock-widget-status"></span>
+        </div>
+        <div class="system-card">
+          <h3 data-i18n="progress_title">Progress</h3>
+          <p class="setting-help" data-i18n="progress_help">
+            XP only grows while you actively play a game.
+          </p>
+          <div class="setting-row">
+            <span class="setting-metric" data-i18n="total_xp">Total XP</span>
+            <span class="setting-metric" data-xp-total>0</span>
+          </div>
+          <div class="setting-row">
+            <span class="setting-metric" data-i18n="rank_label">Rank</span>
+            <span class="setting-metric" data-rank-name>Rookie</span>
+          </div>
+        </div>
+        <div class="system-card">
+          <h3 data-i18n="theme_title">Theme</h3>
+          <p class="setting-help" data-i18n="theme_help">Choose a vibe for the whole site.</p>
+          <div class="setting-options" role="group" aria-label="Theme options">
+            <button class="setting-option" type="button" data-theme-option="default" data-i18n="theme_default">
+              Default
+            </button>
+            <button class="setting-option" type="button" data-theme-option="dark" data-i18n="theme_dark">
+              Dark
+            </button>
+            <button class="setting-option" type="button" data-theme-option="light" data-i18n="theme_light">
+              Light
+            </button>
+            <button class="setting-option" type="button" data-theme-option="ocean" data-i18n="theme_ocean">
+              Ocean
+            </button>
+            <button class="setting-option" type="button" data-theme-option="forest" data-i18n="theme_forest">
+              Forest
+            </button>
+            <button class="setting-option" type="button" data-theme-option="sunset" data-i18n="theme_sunset">
+              Sunset
+            </button>
+            <button class="setting-option" type="button" data-theme-option="dessert" data-i18n="theme_dessert">
+              Dessert
+            </button>
+            <button class="setting-option" type="button" data-theme-option="aurora" data-i18n="theme_aurora">
+              Aurora
+            </button>
+            <button class="setting-option" type="button" data-theme-option="midnight" data-i18n="theme_midnight">
+              Midnight
+            </button>
+            <button class="setting-option" type="button" data-theme-option="cyber" data-i18n="theme_cyber">
+              Cyber
+            </button>
+            <button class="setting-option" type="button" data-theme-option="rose" data-i18n="theme_rose">
+              Rose
+            </button>
+            <button class="setting-option" type="button" data-theme-option="obsidian" data-i18n="theme_obsidian">
+              Obsidian
+            </button>
+            <button class="setting-option" type="button" data-theme-option="rift" data-i18n="theme_rift">
+              Rift
+            </button>
+            <button class="setting-option" type="button" data-theme-option="lagoon" data-i18n="theme_lagoon">
+              Lagoon
+            </button>
+            <button class="setting-option" type="button" data-theme-option="solstice" data-i18n="theme_solstice">
+              Solstice
+            </button>
+            <button class="setting-option" type="button" data-theme-option="eclipse" data-i18n="theme_eclipse">
+              Eclipse
+            </button>
+            <button class="setting-option" type="button" data-theme-option="mirage" data-i18n="theme_mirage">
+              Mirage
+            </button>
+            <button class="setting-option" type="button" data-theme-option="arctic" data-i18n="theme_arctic">
+              Arctic
+            </button>
+            <button class="setting-option" type="button" data-theme-option="copper" data-i18n="theme_copper">
+              Copper
+            </button>
+            <button class="setting-option" type="button" data-theme-option="pink" data-i18n="theme_pink">
+              Pink
+            </button>
+            <button class="setting-option" type="button" data-theme-option="yellow" data-i18n="theme_yellow">
+              Yellow
+            </button>
+            <button class="setting-option" type="button" data-theme-option="whiteglass" data-i18n="theme_whiteglass">
+              White Glass
+            </button>
+          </div>
+        </div>
+        <div class="system-card">
+          <h3>Playstyle</h3>
+          <p class="setting-help">Pick how XP behaves for your playstyle.</p>
+          <div class="setting-options" role="group" aria-label="Playstyle options">
+            <button class="setting-option" type="button" data-playstyle-option="grinder">Grinder</button>
+            <button class="setting-option" type="button" data-playstyle-option="explorer">Explorer</button>
+            <button class="setting-option" type="button" data-playstyle-option="sweat">Sweat</button>
+            <button class="setting-option" type="button" data-playstyle-option="chill">Chill</button>
+            <button class="setting-option" type="button" data-playstyle-option="social">Social</button>
+            <button class="setting-option" type="button" data-playstyle-option="builder">Builder</button>
+          </div>
+          <div class="playstyle-meta">
+            <span class="setting-status" id="playstyle-status"></span>
+            <span class="setting-status" id="playstyle-cooldown"></span>
+          </div>
+          <div class="playstyle-desc" id="playstyle-desc"></div>
+          <div class="playstyle-cost" id="playstyle-cost"></div>
+          <div class="playstyle-grid">
+            <div class="playstyle-item">
+              <strong>Grinder</strong>
+              <span>+10% XP over time.</span>
+            </div>
+            <div class="playstyle-item">
+              <strong>Explorer</strong>
+              <span>+75 XP for each new game you try.</span>
+            </div>
+            <div class="playstyle-item">
+              <strong>Sweat</strong>
+              <span>+35% XP in hard games.</span>
+            </div>
+            <div class="playstyle-item">
+              <strong>Chill</strong>
+              <span>Double AFK tolerance, lower XP gain.</span>
+            </div>
+            <div class="playstyle-item">
+              <strong>Social</strong>
+              <span>+20 XP when you favorite a game.</span>
+            </div>
+            <div class="playstyle-item">
+              <strong>Builder</strong>
+              <span>+30 XP for custom games/apps.</span>
+            </div>
+          </div>
+        </div>
+        <div class="system-card">
+          <h3 data-i18n="language_title">Language</h3>
+          <p class="setting-help" data-i18n="language_help">Change the site language.</p>
+          <div class="setting-options" role="group" aria-label="Language options">
+            <button class="setting-option" type="button" data-lang-option="en" data-i18n="lang_en">
+              English
+            </button>
+            <button class="setting-option" type="button" data-lang-option="ar" data-i18n="lang_ar">
+              Arabic
+            </button>
+            <button class="setting-option" type="button" data-lang-option="ar-lev" data-i18n="lang_ar_lev">
+              Arabic (Levantine)
+            </button>
+            <button class="setting-option" type="button" data-lang-option="fr" data-i18n="lang_fr">
+              French
+            </button>
+            <button class="setting-option" type="button" data-lang-option="es" data-i18n="lang_es">
+              Spanish
+            </button>
+            <button class="setting-option" type="button" data-lang-option="de" data-i18n="lang_de">
+              German
+            </button>
+            <button class="setting-option" type="button" data-lang-option="tr" data-i18n="lang_tr">
+              Turkish
+            </button>
+            <button class="setting-option" type="button" data-lang-option="it" data-i18n="lang_it">
+              Italian
+            </button>
+            <button class="setting-option" type="button" data-lang-option="ru" data-i18n="lang_ru">
+              Russian
+            </button>
+            <button class="setting-option" type="button" data-lang-option="el" data-i18n="lang_el">
+              Greek
+            </button>
+            <button class="setting-option" type="button" data-lang-option="hi" data-i18n="lang_hi">
+              Hindi
+            </button>
+          </div>
+        </div>
+        <div class="system-card">
+          <h3 data-i18n="accent_title">Accent</h3>
+          <p class="setting-help" data-i18n="accent_help">Pick a neon accent for highlights.</p>
+          <div class="setting-options" role="group" aria-label="Accent options">
+            <button class="setting-option" type="button" data-accent-option="neon" data-i18n="accent_neon">
+              Neon
+            </button>
+            <button class="setting-option" type="button" data-accent-option="magenta" data-i18n="accent_magenta">
+              Magenta
+            </button>
+            <button class="setting-option" type="button" data-accent-option="emerald" data-i18n="accent_emerald">
+              Emerald
+            </button>
+            <button class="setting-option" type="button" data-accent-option="amber" data-i18n="accent_amber">
+              Amber
+            </button>
+            <button class="setting-option" type="button" data-accent-option="violet" data-i18n="accent_violet">
+              Violet
+            </button>
+            <button class="setting-option" type="button" data-accent-option="cobalt" data-i18n="accent_cobalt">
+              Cobalt
+            </button>
+            <button class="setting-option" type="button" data-accent-option="rose" data-i18n="accent_rose">
+              Rose
+            </button>
+            <button class="setting-option" type="button" data-accent-option="lime" data-i18n="accent_lime">
+              Lime
+            </button>
+          </div>
+        </div>
+        <div class="system-card">
+          <h3 data-i18n="layout_density_title">Layout Density</h3>
+          <p class="setting-help" data-i18n="density_help">Switch between roomy and compact cards.</p>
+          <div class="setting-options" role="group" aria-label="Density options">
+            <button class="setting-option" type="button" data-density-option="comfort" data-i18n="density_comfort">
+              Comfort
+            </button>
+            <button class="setting-option" type="button" data-density-option="compact" data-i18n="density_compact">
+              Compact
+            </button>
+          </div>
+        </div>
+        <div class="system-card">
+          <h3 data-i18n="motion_title">Motion</h3>
+          <p class="setting-help" data-i18n="motion_help">Reduce animations for a calmer feel.</p>
+          <div class="setting-options" role="group" aria-label="Motion options">
+            <button class="setting-option" type="button" data-motion-option="full" data-i18n="motion_full">
+              Full
+            </button>
+            <button class="setting-option" type="button" data-motion-option="reduced" data-i18n="motion_reduced">
+              Reduced
+            </button>
+          </div>
+        </div>
+        <div class="system-card">
+          <h3 data-i18n="performance_title">Performance</h3>
+          <p class="setting-help" data-i18n="performance_help">
+            High Speed is the best (awesome). Medium is regular. Low is super light for cheap school computers.
+          </p>
+          <div class="setting-options" role="group" aria-label="Performance options">
+            <button class="setting-option" type="button" data-performance-option="high" data-i18n="performance_high">
+              High Speed
+            </button>
+            <button class="setting-option" type="button" data-performance-option="medium" data-i18n="performance_medium">
+              Medium
+            </button>
+            <button class="setting-option" type="button" data-performance-option="low" data-i18n="performance_low">
+              Low
+            </button>
+          </div>
+        </div>
+        <div class="system-card">
+          <h3 data-i18n="control_center_title">Control Center</h3>
+          <p class="setting-help" data-i18n="control_center_help">
+            Drag to rearrange sections on the Home Screen.
+          </p>
+          <div class="control-center" id="layout-list" aria-label="Home layout"></div>
+          <button class="pill ghost" type="button" id="layout-reset" data-i18n="reset_layout">
+            Reset layout
+          </button>
+        </div>
+        <div class="system-card">
+          <h3 data-i18n="background_effects_title">Background Effects</h3>
+          <p class="setting-help" data-i18n="background_effects_help">
+            Toggle the ambient orbs and grid.
+          </p>
+          <button class="setting-toggle" type="button" data-ambient-toggle>Ambient: On</button>
+        </div>
+        <div class="system-card">
+          <h3 data-i18n="favorites_title">Favorites</h3>
+          <p class="setting-help" data-i18n="favorites_settings_help">
+            Home Screen shows up to 8 favorites.
+          </p>
+          <div class="setting-row">
+            <span class="setting-metric" id="favorites-count-inline">0 saved</span>
+            <button class="pill ghost" type="button" id="clear-favorites" data-i18n="clear_favorites">
+              Clear favorites
+            </button>
+          </div>
+        </div>
+        <div class="system-card auth-settings-card">
+          <h3>Account</h3>
+          <p class="setting-help">Manage your login session on this device.</p>
+          <div class="setting-row">
+            <button class="pill small auth-settings-logout auth-logout-btn" type="button" id="settings-logout-btn">
+              Log Out
+            </button>
+            <span class="setting-status" id="settings-logout-status"></span>
+          </div>
+        </div>
+        <div class="system-card">
+          <h3 data-i18n="quick_shortcuts_title">Quick Shortcuts</h3>
+          <p class="setting-help" data-i18n="quick_shortcuts_help">Jump straight to your lists.</p>
+          <div class="setting-options">
+            <a class="pill ghost link-pill" href="favorites.html" data-i18n="open_favorites">
+              Open Favorites
+            </a>
+            <a class="pill ghost link-pill" href="games.html" data-i18n="browse_games">Browse All Games</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span data-i18n="footer_credit">TM Arcade V2 by Ahmad Abu Sammour.</span>
+    </footer>
+
+    <script src="app.js?v=20260217u"></script>
+  </body>
+</html>

@@ -1,0 +1,533 @@
+Original prompt: 1️⃣ Dynamic Free Glass Banner ... 8️⃣ Local Storage Structure (handled internally) with requirements for admin mode, mini-events, school mode, distraction-free game mode, and local-only state updates.
+
+- Read existing app architecture in /Users/ahmadsammour/Documents/Ahmads Prject/app.js and /Users/ahmadsammour/Documents/Ahmads Prject/styles.css.
+- Found existing XP/TM economy, theme switching, performance levels, HUD toasts, and page modes already in place.
+- Plan is to extend existing systems instead of replacing them:
+  1) add unified local-only state + admin tab access gates
+  2) add dynamic free banner and mini-event layer (non-game pages only)
+  3) add admin UI/page + school mode toggles and controls
+  4) verify behavior via local run and Playwright loop
+- Added local-only hub extension in /Users/ahmadsammour/Documents/Ahmads Prject/app.js:
+  - hidden admin unlock sequence + tab-scoped admin access
+  - unified local state snapshot key with fields xp/money/rank/admin/miniEventsEnabled/schoolMode/sessionTime
+  - dynamic free-glass banner (expand/collapse + school mode toggle)
+  - mini-event loop, click rewards, floating delta popups, spark/confetti bursts
+  - admin runtime controls wiring (economy/toggles/events/theme/banner)
+- Added /Users/ahmadsammour/Documents/Ahmads Prject/admin.html with local-only admin UI and lock gate.
+- Reworked /Users/ahmadsammour/Documents/Ahmads Prject/styles.css for banner component, distraction-free rules, mini-events visuals, and admin page styles.
+- Updated /Users/ahmadsammour/Documents/Ahmads Prject/app.js XP code flow: entering code 082313428815 now unlocks Admin controls for the current tab (reusable), adds Admin nav link, and syncs hub state.
+- Nerfed rewards implemented in /Users/ahmadsammour/Documents/Ahmads Prject/app.js:
+  - mini-event + interaction rewards now 2–5 XP and 1–3 TM$
+  - passive gains now local-configurable with defaults 2.5 XP/min and 0.75 TM$/min across active game iframe sessions
+  - passive and mini rewards now support local admin multiplier + debug preview mode
+- Added secret page unlock flow:
+  - 5 clicks on top-left brand unlocks secret page
+  - persisted key `secretTMPageUnlocked` in localStorage and mirrored into hub payload
+  - guarded `/Users/ahmadsammour/Documents/Ahmads Prject/secret.html` behind local unlock
+- Added local power-user/admin controls:
+  - passive rate override inputs, local multiplier cycling, debug preview toggle
+  - independent mini toggles (XP, money, visuals, sounds)
+  - max visual test, secret key combos for effects/theme shifts
+  - local achievements (`Clicked 100 times`, `secretFound`) + milestone FX
+- Updated game HUD behavior:
+  - game-only pages now enforce back + emergency controls at bottom-left
+  - emergency opens Google Classroom in a new tab
+  - ensured username tag exists on all game-only pages
+  - calculator initialized only in game-only pages
+- Updated admin UI in /Users/ahmadsammour/Documents/Ahmads Prject/admin.html to expose the new controls.
+- Added local player profile tracking and emergency-link customization:
+  - Added profile stats storage in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js` using `tm_profile_stats`.
+  - Tracked per-game playtime seconds during active gameplay ticks (`canGainXp` loop) and tracked launches on game/custom-game entry.
+  - Added profile rendering logic for totals + per-game minutes/launches/last played.
+- Added configurable Emergency Mode URL:
+  - New key `tm_emergency_url` with default fallback `https://classroom.google.com/`.
+  - Emergency button in shared app flow now opens configured URL.
+  - Added emergency URL controls in `/Users/ahmadsammour/Documents/Ahmads Prject/settings.html` (save/reset).
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/minecraft.html` emergency button to use the same local key.
+- Added new profile page:
+  - Created `/Users/ahmadsammour/Documents/Ahmads Prject/profile.html` with player snapshot + per-game stats table.
+  - Added profile page styling in `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css`.
+  - Added dynamic profile nav link insertion in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js` so all pages get a Profile tab.
+- Note: JS syntax/runtime checks via Node/Playwright could not be executed in this environment because `node`/`npx` are unavailable.
+- Major update implemented for secure lock-screen OS flow:
+  - Added boot splash + fullscreen lock flow in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js` using `initLockScreenUi()` and `lockSiteNow("boot")`.
+  - Added PIN security with salted SHA-256 hashes via Web Crypto (`LOCK_PIN_HASH_KEY`, `LOCK_PIN_SALT_KEY`, `hashLockPin`, `saveLockPin`).
+  - Incorrect unlock attempts now trigger shake/red pulse + input clear; correct unlock applies success glow + fade.
+  - Added auto-lock settings and behavior (`LOCK_AUTO_ENABLED_KEY`, `LOCK_AUTO_MINUTES_KEY`) with inactivity detection and instant lock shortcut `Ctrl/Cmd + Shift + L`.
+  - Added manual `Lock Now` in Settings and ensured locked state pauses XP/playtime accrual (`canGainXp` checks `systemLocked`).
+- Profile upgrade implemented in `/Users/ahmadsammour/Documents/Ahmads Prject/profile.html` + `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`:
+  - New premium profile modules: circular playtime rank progress, most played game card, average session, launches card, and achievement showcase.
+  - Added playtime-rank ladder (`playtimeRankTiers`) and dynamic progress rendering in `renderProfilePage()`.
+  - Added dynamic achievement extraction from local achievement storage (supports legacy `xpMilestones` arrays and object form).
+  - Added per-day playtime persistence (`dailyPlay`) in profile stats model for lock screen "Today" metric.
+- Settings update implemented in `/Users/ahmadsammour/Documents/Ahmads Prject/settings.html`:
+  - Added Lock Screen card for PIN save/change, auto-lock toggle/minutes, and Lock Now action.
+- Styling update implemented in `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css`:
+  - Added full lock-screen visual system, boot card, error/success animations, and responsive behavior.
+  - Added premium profile dashboard styles (rank ring, achievement cards, highlight/stat cards).
+- Verification:
+  - Ran local server smoke check with escalated permissions (`python3 -m http.server`) and confirmed `index.html`, `settings.html`, and `profile.html` were served.
+  - Could not run required Playwright loop from `develop-web-game` skill because `node`/`npx` are not installed in this environment.
+- Next-agent TODOs:
+  - Install Node + Playwright client tooling, then run `$WEB_GAME_CLIENT` loop and visually validate lock transitions/profile cards.
+  - Add i18n keys for new lock/profile labels if full localization is required.
+- Fix applied: lock no longer triggers on every same-tab page navigation.
+  - Added session-scoped unlock flag `tm_lock_session_unlocked` in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`.
+  - Site now only shows lock on first load per tab/session; unlock persists while navigating pages in the same tab.
+  - Manual/auto/shortcut lock clears the session flag so lock still works when intentionally triggered.
+- Lock screen UX restyled to laptop-style flow:
+  - Added two-stage lock interaction in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`: first shows large clock wallpaper, then unlock panel opens on click/key.
+  - Updated lock visuals in `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css` to mimic laptop lock behavior with centered time and slide-up auth card.
+- Enhanced lock screen aesthetics and onboarding guidance:
+  - Upgraded lock visuals in `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css` with stronger glass-morphism layers, curved frames, animated tech-grid ambience, and richer clock/auth panel polish.
+  - Added explicit no-password guidance in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js` lock copy so users are told to go to `Settings > Lock Screen > Save PIN`.
+  - Added lock setup tip row (`#lock-setup-tip`) shown only when no lock password exists.
+- Added lock-screen widgets customization + theme-aware visuals:
+  - New local widget config key `tm_lock_widgets` in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`.
+  - Added lock widget dock on wallpaper view (`#lock-widget-dock`) with configurable cards (economy, streak, today, lifetime, savings, session, favorites).
+  - Added settings controls (`#lock-widget-options`) to toggle widgets with persistence.
+  - Refined lock visual colors to use theme/accent variables so lock screen better matches active theme.
+  - Added explicit no-password guidance text on lock screen and setup tip row.
+- Added lock recovery-password flow end-to-end:
+  - New recovery storage keys in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js` (`tm_lock_recovery_hash`, `tm_lock_recovery_salt`, `tm_lock_recovery_hint`) using salted SHA-256 via existing Web Crypto hashing helper.
+  - Added lock-screen `Forgot Password?` button + recovery input panel and unlock verification path in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`.
+  - Added recovery-password + confirm + hint controls in `/Users/ahmadsammour/Documents/Ahmads Prject/settings.html` and wired save/remove/status handling in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`.
+- Lock screen visual polish pass applied in `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css`:
+  - stronger theme-aware wallpaper gradients, glass depth layers, widget hover polish, and styled recovery panel states.
+- Verification:
+  - Re-ran local serve smoke test with escalated `python3 -m http.server` and confirmed `index.html` + `settings.html` load and include new lock recovery elements.
+  - Could not run Playwright skill client because `node`/`npx` are unavailable in this environment.
+- Added hidden owner lock override in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`:
+  - tapping lock clock 5 times within 7 seconds arms override mode,
+  - entering `082313428815` in lock PIN input now unlocks,
+  - override state resets on lock open/close/escape,
+  - PIN input switches between normal PIN mode and owner-code mode safely.
+- Verified served `app.js` contains override constants/handlers using local `python3 -m http.server` smoke check.
+- UI polish pass for user request "homescreen sharp/high-tech liquid glass + nicer password entry":
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css` with home-only futuristic glass treatment (`body[data-page="popular"]`) including layered holographic overlays, upgraded nav glass shell, stronger hero/home panel depth, and richer hover motion for nav, cards, and buttons.
+  - Enhanced lock auth input presentation in `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css` by styling `.system-lock-form`, `.system-lock-recovery-row`, and `.system-lock-input` with premium glass fields, scan-line hover effects, improved focus glow, and cleaner button hover glow.
+- Verification:
+  - Ran local smoke check via `python3 -m http.server` and confirmed new CSS rules are present in served `styles.css`.
+  - Playwright visual loop still not runnable here because `node`/`npx` are unavailable.
+- Follow-up scope correction from user ("I meant the lockscreen"):
+  - Removed prior home-only visual override block (`body[data-page="popular"]`) from `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css` so the update targets lock UI only.
+  - Added new lockscreen-only premium styling in `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css`:
+    - animated panel tech-grid and spectral glow layers,
+    - stronger liquid-glass auth card depth/hover,
+    - upgraded clock neon gradient/flicker treatment,
+    - refined metric card hover states,
+    - improved password/recovery field shells and status chip.
+- Verification:
+  - Served `styles.css` via local `python3 -m http.server` and confirmed new lockscreen keyframes/selectors are present.
+- Added offline site download controls for "play from your files":
+  - New Settings card in `/Users/ahmadsammour/Documents/Ahmads Prject/settings.html` with `Download Site Files` and `Download Core Only` buttons + status.
+  - Added download file lists and sequential browser-triggered download logic in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js` (`CORE_SITE_DOWNLOAD_FILES`, `FULL_SITE_DOWNLOAD_FILES`, `startSiteFileDownload`).
+  - Added status handling and duplicate-run guard for download actions.
+- Verification:
+  - Ran local `python3 -m http.server` smoke check and confirmed new settings IDs and JS download logic are present in served files.
+- Added offline-download update warning:
+  - `/Users/ahmadsammour/Documents/Ahmads Prject/settings.html`: visible warning text that downloaded files do not auto-update.
+  - `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css`: `setting-warning` style for warning callout.
+  - `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`: confirmation prompt before download and status reminder that offline files will not auto-update.
+- Lock-screen polish pass (latest user request "Make the lock screen look better"):
+  - Refined outer glass frame (`.system-lock-panel::before/::after`) for lighter, more colorful, transparent glass with smoother curves.
+  - Rebalanced lock layout (`.system-lock-layout/.system-lock-top/.system-lock-middle/.system-lock-bottom`) so clock/auth/hint fit better and stay visible.
+  - Improved password/recovery fit (`.system-lock-form`, `.system-lock-pin-shell`, `.system-lock-recovery-row`, `.system-lock-recovery-panel`) with better sizing and balanced button widths.
+  - Kept unlock logic unchanged; this pass is visual/fit only.
+- Cache bust updated again across all HTML pages: `styles.css?v=20260214n`.
+- Note: No Playwright visual loop run in this environment during this pass.
+- Lock-screen readability adjustment per user request:
+  - Removed standalone glass treatment around the clock by simplifying `.system-lock-top` to transparent/no-border/no-shadow.
+  - Kept full-screen outer glass frame intact.
+  - Increased readability for clock/date/hint/status text and tuned mobile clock spacing.
+  - Updated cache bust across all HTML files to `styles.css?v=20260214o`.
+- Lock-screen inner-glass clarity pass:
+  - Reduced haze/darkness in `.system-lock-panel::before` and `.system-lock-wallpaper::before` for better visibility through the glass.
+  - Softened inner auth card fog by lowering opacity/tint in `.system-lock-card`, `.system-lock-card::before`, `.system-lock-pin-shell`, and recovery panel/input surfaces.
+  - Slightly reduced global lock blur (`.system-lock-root` backdrop-filter) so the screen feels clearer.
+  - Cache bust updated to `styles.css?v=20260214p` across HTML files.
+- Lock-screen UX update per user request:
+  - Restored lock widgets by adding `#lock-widget-dock` back into lock-screen markup and styling `.system-lock-widget-dock` / `.system-lock-widget` for desktop + mobile.
+  - Added welcome line with active user name (`#lock-welcome`) and wired it in `updateLockScreenStats()` using localized `welcome` text.
+  - Removed the on-screen "press/tap to open" hint by removing the lock-bottom hint markup.
+  - Bumped asset cache versions across HTML files to `styles.css?v=20260214q` and `app.js?v=20260214q`.
+- Download + lock PIN improvements:
+  - Added fresh-download stamping in `startSiteFileDownload()` so each file request bypasses cache and pulls the latest available file at download time.
+  - Updated offline warning/status copy to clarify latest-at-download behavior.
+  - Added persisted lock PIN length key (`tm_lock_pin_length`) and wired it through save/disable/storage sync.
+  - Lock PIN dot slots are now dynamic and match expected PIN length (4/5/6) instead of always showing 6.
+  - Existing old PINs without stored length auto-learn length after first successful unlock.
+  - Bumped app script cache version across HTML pages to `app.js?v=20260214s`.
+- Added requested game pack to `games` in `app.js` (Learn To Fly 1/2/3, Just Fall LOL, Pokemon Diamond/Platinum, Fancy Pants Adventure 2, Amazing Rope Police, and Papa's titles) with badge + description for each.
+- Verified these launch through `play.html?game=...` via `buildStandardGameHref`, so they inherit the same HUD setup (Back to Home, Emergency, calculator widget, username tag).
+- Added explicit sweat-mode hard classification for selected new games using `hardGameIds` and expanded `HARD_GAME_LABELS` display.
+- Bumped script cache version to `app.js?v=20260214t` across HTML files.
+- Lock-screen welcome animation update:
+  - Moved visual order so widget dock appears above welcome text (`clock/date -> widgets -> welcome`).
+  - Increased default welcome size significantly and styled it as a hero line.
+  - Added `auth-open` transition so welcome shrinks/minimizes smoothly when password panel opens.
+  - Updated responsive rules so mobile still scales down cleanly.
+  - Bumped stylesheet cache version to `styles.css?v=20260214r`.
+- Lock welcome hero size update:
+  - Enlarged welcome line to a near-full-width bottom hero treatment under widgets.
+  - Improved minimize animation on `auth-open` with smoother cubic-bezier easing, scale + translate.
+  - Updated mobile sizing so the large welcome remains readable and still shrinks cleanly on auth open.
+  - Bumped stylesheet cache version to `styles.css?v=20260214s`.
+- Lock welcome amplified further per user request:
+  - Expanded welcome hero to occupy most of the lock-screen lower area (very large type + large min-height block).
+  - Kept and improved auth-open minimize animation (smooth easing, scale/translate, min-height collapse).
+  - Updated mobile hero sizing and auth-open shrink values accordingly.
+  - Bumped stylesheet cache version to `styles.css?v=20260214u`.
+- Lock-screen center + scale refinement:
+  - Fixed right shift by removing residual clock left-padding and enforcing centered width/alignment on lock top elements.
+  - Reduced oversized welcome text and block height slightly while keeping it prominent.
+  - Kept existing auth-open minimize animation behavior.
+  - Bumped stylesheet cache version to `styles.css?v=20260214v`.
+- Implemented drag reordering upgrade for games/apps in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`:
+  - Added shared `initGridReorder(...)` helper with native drag + long-press touch drag.
+  - Long-press on touch/pen now enables reorder with movement threshold, click suppression after drag, and persisted ordering.
+  - Added dedicated all-games order key `tm_all_games_order` and ordering pipeline (`normalizeAllGamesOrder`, `orderAllGames`).
+  - Enabled drag on `data-page="all"` cards and persisted all-games reorder independently from favorites/apps.
+  - Custom game deletion now removes IDs from all-games order storage as well.
+- Added drag polish styles in `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css`:
+  - no text selection during active touch reorder,
+  - grabbing cursor state,
+  - active dragging elevation,
+  - touch callout suppression for draggable cards.
+- Verification status:
+  - `node`/`npx` are not available in this environment, so the required Playwright client loop from `develop-web-game` could not be executed.
+- Robustness follow-up in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`:
+  - Added window-level `pointerup`/`pointercancel` and `blur` fallbacks in reorder helper so touch drag state cannot remain stuck when pointer ends outside the grid.
+- Smoke checks:
+  - Started local server with `python3 -m http.server` and verified `games.html` serves `200 OK`.
+  - Fetched served `/app.js` and confirmed new markers (`tm_all_games_order`, `initGridReorder`, page `all` drag enable).
+- Added reset-to-default controls for reordered grids:
+  - `/Users/ahmadsammour/Documents/Ahmads Prject/games.html`: added `#reset-games-order` button next to Create Game.
+  - `/Users/ahmadsammour/Documents/Ahmads Prject/index.html`: added `#reset-apps-order` button next to Create in Apps section.
+  - `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css`: added `.section-header-actions` layout helper.
+  - `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`:
+    - added `resetAppsOrder()` that restores the app grid to default built-in order and keeps custom apps grouped after built-ins,
+    - wired click handlers for both reset buttons,
+    - games reset clears `tm_all_games_order` and re-renders all-games view.
+- Cache-bust bump for touched pages:
+  - `styles.css?v=20260215j` and `app.js?v=20260215f` in `index.html` and `games.html`.
+- Verified via local `python3 -m http.server` smoke check that new buttons + JS handlers are present in served output.
+- Lock-screen long-name fit fix implemented in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`:
+  - added dynamic text fitting helpers (`fitLockTextNode`, `queueLockTextFit`) for lock welcome/name labels,
+  - trigger fitting on lock stats refresh, auth panel open/close, and window resize while locked.
+- Lock-screen text safety polish in `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css`:
+  - `.system-lock-user` now has explicit max width + single-line overflow safeguards.
+- Home-page credit bubble added per request:
+  - inserted `<div class="home-credit-bubble">Made By Ahmad Abu Sammour</div>` in `/Users/ahmadsammour/Documents/Ahmads Prject/index.html` before footer.
+  - styled glass bubble in `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css`.
+- Cache-bust bump applied on main pages touched:
+  - `/Users/ahmadsammour/Documents/Ahmads Prject/index.html` and `/Users/ahmadsammour/Documents/Ahmads Prject/games.html` now use `styles.css?v=20260215k` and `app.js?v=20260215g`.
+- Verification:
+  - local serve smoke check via `python3 -m http.server` confirmed new lock-fit JS markers and home bubble markup/styles are present in served output.
+- Follow-up fix for lock-screen long-name regression:
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/app.js` lock text-fit scheduler to run multiple post-transition passes (`requestAnimationFrame` + delayed retries at 220/680/1120ms).
+  - Added `transitionend` listeners on lock auth shell and lock panel to re-run text fit after UI transitions complete.
+- Home credit visibility fix:
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css` `.home-credit-bubble` to `position: fixed` at viewport bottom center so it is always visible.
+- Cache-bust bump:
+  - `/Users/ahmadsammour/Documents/Ahmads Prject/index.html` and `/Users/ahmadsammour/Documents/Ahmads Prject/games.html` now load `styles.css?v=20260215l` and `app.js?v=20260215h`.
+- Verification:
+  - Local served-output smoke check confirmed the new lock-fit scheduler, transition hooks, fixed bubble styles, and updated cache-bust params are present.
+- Addressed lock-screen text pulsing regression:
+  - Simplified lock text fitting in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js` to target only `.system-lock-user` (username), not the large welcome headline.
+  - Replaced multi-timer + transition-end fitting loop with a stable single `requestAnimationFrame` + short delayed pass to avoid repeated grow/shrink behavior.
+  - Removed lock transition-end listeners that were retriggering fit cycles.
+- Added lock-screen "Made By Ahmad Abu Sammour" glass bubble:
+  - Inserted lock bottom bubble in lock-screen markup in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`.
+  - Added `.system-lock-credit-bubble` styling in `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css`.
+- Lock welcome readability tweak:
+  - Updated `.system-lock-welcome` in `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css` to allow balanced wrapping instead of hard single-line truncation.
+- Cache/version sync across pages:
+  - Updated HTML asset query strings project-wide to `styles.css?v=20260215m` and `app.js?v=20260215i` so lock-screen updates load from any route.
+- Verification:
+  - Local served-output smoke check confirmed presence of new lock bubble markup, stable text-fit logic, and updated cache versions on representative pages.
+- Lock-screen credit bubble polish per user request:
+  - Raised the lock bubble position by adding bottom margin on `.system-lock-bottom`.
+  - Increased lock bubble size to ~2x (larger font and padding) in `.system-lock-credit-bubble`.
+  - Added open-password animation: `.system-lock-panel.auth-open .system-lock-credit-bubble` now runs `lock-credit-shrink-on-auth` for 1s.
+- Cache update:
+  - Bumped stylesheet query version site-wide to `styles.css?v=20260215n` so CSS changes load immediately.
+- Verification:
+  - Served-file smoke check confirms raised/bigger lock bubble styles and the auth-open shrink animation are present.
+- User requested removing duplicate credit labels on regular pages:
+  - Added global floating credit-bubble injection in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js` (`ensureFloatingCreditBubble`) for non-game routes.
+  - Removed static home-only bubble markup from `/Users/ahmadsammour/Documents/Ahmads Prject/index.html`.
+  - Hid footer credit text globally by setting `.footer span { display: none; }` in `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css`.
+- Cache/version update:
+  - Updated all HTML asset params to `styles.css?v=20260215o` and `app.js?v=20260215j`.
+- Verification:
+  - Local server smoke check confirms new global floating bubble script, footer span hidden style, and updated asset versions in served output.
+- Savings interest request handled:
+  - Confirmed `/Users/ahmadsammour/Documents/Ahmads Prject/app.js` already uses `const SAVINGS_RATE_PER_MIN = 0.001` for accrual math.
+  - Updated user-facing English savings description to show `0.001 per minute` in both `/Users/ahmadsammour/Documents/Ahmads Prject/app.js` i18n text and `/Users/ahmadsammour/Documents/Ahmads Prject/bank.html` fallback copy.
+  - Bumped all HTML script references to `app.js?v=20260215k` to force fresh JS load.
+- Verification: local served `bank.html` and `app.js` show `0.001 per minute` and `SAVINGS_RATE_PER_MIN = 0.001`.
+- Savings per-minute display aligned with 0.001 update:
+  - Updated savings rate formatting in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js` to 3 decimals in both bank UI (`[data-savings-rate]`) and lock widget savings value.
+  - Keeps underlying rate at `SAVINGS_RATE_PER_MIN = 0.001` and now avoids misleading `0.00` displays for lower balances.
+- Cache update:
+  - Bumped all HTML script refs to `app.js?v=20260215l`.
+- Verification:
+  - Served `app.js` shows `minimumFractionDigits: 3` for both rate display paths and `SAVINGS_RATE_PER_MIN = 0.001`.
+- Savings calculation corrected per user report:
+  - Updated savings accrual in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js` from balance-scaled (`savingsBalance * rate * minutes`) to flat-rate (`rate * minutes`) while savings balance is > 0.
+  - Updated rate display in bank UI and lock savings widget to show the constant `SAVINGS_RATE_PER_MIN` directly.
+  - Updated English description strings to "0.001 TM$ per minute" in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js` and `/Users/ahmadsammour/Documents/Ahmads Prject/bank.html`.
+- Cache update:
+  - Bumped all HTML script refs to `app.js?v=20260215m`.
+- Verification:
+  - Local served `app.js` confirms flat accrual (`savingsAccrued += SAVINGS_RATE_PER_MIN * elapsedMinutes`) and constant rate display formatting.
+- Language maintenance update:
+  - Added `syncLanguageTables(...)` in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js` and applied it to both `translations` and `lockTranslations`.
+  - This auto-fills missing locale keys from English so all languages stay up to date when new/changed strings are introduced (while preserving existing locale-specific translations).
+- Savings context kept aligned:
+  - Confirmed current rate remains `0.01%` (`SAVINGS_RATE_PER_MIN = 0.0001`) and updated English description reflects this.
+- Cache update:
+  - Bumped all HTML script refs to `app.js?v=20260215p`.
+- Verification:
+  - Local served output confirms `syncLanguageTables` is active and latest savings/lang changes are loaded.
+- Auth flow overhaul (user request with provided Apps Script URL):
+  - Set default auth backend URL to `https://script.google.com/macros/s/AKfycbyZMuHXSgCTKWueC2U0gxaL1y43IwKE5s-3AGAv56r-civ0niUHKJHaT6IXgfxcDXRzvw/exec` in `app.js`.
+  - Reworked auth overlay into two separate pages (Sign In page and Create Account page) instead of tabbed same-screen mode.
+  - Removed the bottom auth URL input/save controls from the auth UI.
+  - Updated auth gate visuals so underlying home content is hidden while gated, with stronger glass overlay.
+  - After successful login or account creation, auth now forces transition to lock screen (`lockSiteNow("manual")`).
+  - Kept owner code unlock and admin XP code `082313428815` path per user request.
+  - Added admin account-management table/actions UI + wiring and updated page copy to role-based admin access.
+  - Bumped all HTML cache-bust refs to `styles.css?v=20260216b` and `app.js?v=20260216b`.
+- Follow-up change per user request:
+  - Removed `082313428815` from XP/admin code redemption path.
+  - Removed legacy code-based admin unlock state (`tm_legacy_admin_unlocked`) and all related logic.
+  - Admin access is now only via authenticated admin account role.
+  - Kept `082313428815` as lock-screen owner override code only.
+- Frontend/backend auth integration pass:
+  - Connected frontend to new `code.gs` profile endpoints (`getProfile`, `saveProfile`) and added cloud profile sync logic.
+  - Session persistence improved: if token+user exist in localStorage, pages no longer force re-login; auth gate stays closed and profile hydrates in background.
+  - Register form simplified to username/password/confirm-password (removed display-name input).
+  - Auth UI reworked with top tabs (`Sign In` / `Create Account`) and separate page sections.
+  - Added cloud save queue on XP/TM/Streak updates + periodic autosave + unload save attempt.
+  - `code.gs` account schema extended with `profile_json`; login/session/register now return profile metadata.
+  - Admin accounts list now includes XP, Rank, TM$, and Streak columns from backend profile data.
+  - Cache-bust updated everywhere to `styles.css?v=20260216d` and `app.js?v=20260216d`.
+- Admin grants + public XP leaderboard update:
+  - Added backend actions in `/Users/ahmadsammour/Documents/Ahmads Prject/code.gs`:
+    - `adminGrantProfile` for admin-controlled profile updates (XP, TM$, streak, rank).
+    - `getLeaderboard` for global XP ranking (sorted by XP desc, tie-breaker TM$, available to any logged-in user).
+  - Expanded `/Users/ahmadsammour/Documents/Ahmads Prject/admin.html` with target-player reward controls:
+    - Target username selector and status line.
+    - XP/TM$/streak add-remove-set controls.
+    - Rank set control.
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`:
+    - Wired admin reward actions to backend (`adminGrantProfile`) instead of local-only edits.
+    - Added account-row “Select” action to quickly choose target player.
+    - Added safer table rendering for account values.
+    - Added site-wide `Leaderboard` nav link injector.
+    - Replaced local-only leaderboard renderer with cloud-backed leaderboard fetch + cache + refresh flow.
+    - Added dedicated leaderboard page initialization and refresh handling.
+  - Added new `/Users/ahmadsammour/Documents/Ahmads Prject/leaderboard.html` page accessible to all users, showing global XP ranks.
+  - Cache-bust updated project-wide to `styles.css?v=20260216e` and `app.js?v=20260216e` so all pages load the latest admin/leaderboard changes.
+- Leaderboard/admin/DM quality-of-life update:
+  - Leaderboard now uses emoji branding in nav and header (`🏆 Leaderboard`) via `/Users/ahmadsammour/Documents/Ahmads Prject/leaderboard.html` and nav injection in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`.
+  - Admin XP/TM$ grants made easier:
+    - Added quick amount inputs in `/Users/ahmadsammour/Documents/Ahmads Prject/admin.html`.
+    - Added one-click row actions (`+XP`, `+TM$`) in account table, wired to backend grants in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`.
+    - Kept advanced target-based controls for rank/streak and custom changes.
+  - Added Direct Messaging (DM):
+    - Backend DM endpoints in `/Users/ahmadsammour/Documents/Ahmads Prject/code.gs`:
+      - `sendDirectMessage` (authenticated)
+      - `getDirectMessages` (authenticated)
+    - Added DM storage sheet support (`TM Arcade DMs`) with auto-header setup.
+    - Added new page `/Users/ahmadsammour/Documents/Ahmads Prject/messages.html`.
+    - Added DM UI/logic in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js` (recipient list, thread render, send, polling refresh).
+    - Added DM styles in `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css`.
+    - Added global nav injection for `💬 Messages`.
+  - Download bundle list updated to include `leaderboard.html` and `messages.html` in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`.
+  - Cache-bust updated project-wide to `styles.css?v=20260216f` and `app.js?v=20260216f`.
+- Messaging + admin upgrades per request:
+  - Reworked messaging UI in `/Users/ahmadsammour/Documents/Ahmads Prject/messages.html`, `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`, and `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css`:
+    - Replaced recipient dropdown with high-tech chat selection buttons (Direct + Group sections).
+    - Added glass-styled compact message bubbles and refreshed DM layout.
+    - Added in-page group chat creator with selectable member chips.
+  - Added group chat backend in `/Users/ahmadsammour/Documents/Ahmads Prject/code.gs`:
+    - `createGroupChat`, `getChatInbox`, `getChatThread`, `sendChatMessage`.
+    - Added auto-managed sheets: `TM Arcade Groups` and `TM Arcade Group Messages`.
+  - Added admin password visibility support:
+    - Extended account schema with `password_plain` (stored for new accounts and on successful login).
+    - `adminListAccounts` now returns password data (plain if available, otherwise hash fallback).
+    - Admin accounts table now includes a Password column.
+  - Leaderboard emoji branding retained (`🏆 Leaderboard`) and messages nav link uses `💬 Messages`.
+  - Cache-bust updated project-wide to `styles.css?v=20260216g` and `app.js?v=20260216g`.
+- Messaging/name/nav polish update:
+  - Made DM bubbles noticeably smaller in `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css` for a compact “tiny bubble” chat look.
+  - Added display-name customization APIs in `/Users/ahmadsammour/Documents/Ahmads Prject/code.gs`:
+    - `setDisplayName` (self-update)
+    - `adminSetDisplayName` (admin updates any account)
+  - Wired settings name save in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js` to sync display names to backend when logged in.
+  - Expanded admin account tools in `/Users/ahmadsammour/Documents/Ahmads Prject/admin.html` and `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`:
+    - Added Display Name column.
+    - Added per-account `Rename` action.
+  - Added deterministic top nav ordering in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js` so links stay in the same positions across pages and roles.
+  - Cache-bust updated project-wide to `styles.css?v=20260216h` and `app.js?v=20260216h`.
+- DM bubble layout tweak per user request:
+  - Changed message flow to vertical stack in `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css` (`.dm-thread` now flex column, outgoing no longer right-aligned).
+  - Made sent message bubbles smaller than incoming bubbles (`.dm-bubble.outgoing` reduced max width).
+  - Cache-bust bumped project-wide to `styles.css?v=20260216i` and `app.js?v=20260216i`.
+- Admin push-reward buttons feature:
+  - Added backend actions in `/Users/ahmadsammour/Documents/Ahmads Prject/code.gs`:
+    - `adminCreateScreenReward` (admin sends a reward button to a target user)
+    - `getScreenRewards` (user polls active buttons for their account)
+    - `claimScreenReward` (user clicks to claim XP/TM$/streak/rank reward)
+  - Added new backend sheet support:
+    - `TM Arcade Screen Rewards` with auto header setup + parsing helpers.
+  - Added admin UI in `/Users/ahmadsammour/Documents/Ahmads Prject/admin.html`:
+    - New “Push Reward Buttons” card with target, label, message, XP, TM$, streak, rank, and expiry inputs.
+  - Added frontend wiring in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`:
+    - Admin send flow (`adminCreateScreenReward`).
+    - User-side floating reward panel with clickable buttons.
+    - Auto polling while logged in + claim handling that syncs profile updates.
+  - Added styles in `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css` for the floating screen-reward panel and buttons.
+  - Cache-bust bumped project-wide to `styles.css?v=20260216j` and `app.js?v=20260216j`.
+- Account management compact-layout update:
+  - Simplified account table in `/Users/ahmadsammour/Documents/Ahmads Prject/admin.html` from many columns to compact columns: `Account`, `Role`, `Stats`, `Password`, `Created`, `Actions`.
+  - Reworked row rendering in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`:
+    - Combined username/display into one identity cell.
+    - Combined XP/TM$/streak/rank into compact stat chips.
+    - Shortened button labels and password preview to reduce row width.
+    - Updated empty/loading row colspans to match compact layout.
+  - Tightened admin table styles in `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css`:
+    - Reduced row/button sizing, adjusted column widths, and added compact identity/stat styling.
+  - Cache-bust bumped project-wide to `styles.css?v=20260216k` and `app.js?v=20260216k`.
+- Admin controls reliability + presence update:
+  - Improved target-based XP/TM$/streak/rank controls in `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`:
+    - Added persistent target selection (`tm_admin_target_username`).
+    - Clicking an account row now selects the target for controls.
+    - Added automatic fallback target selection when loading accounts.
+    - Highlighted selected target row and surfaced a dedicated target chip.
+  - Added admin-visible online/offline status in account list:
+    - Backend `/Users/ahmadsammour/Documents/Ahmads Prject/code.gs` now returns `online` per account in `adminListAccounts`.
+    - Frontend `/Users/ahmadsammour/Documents/Ahmads Prject/app.js` now renders online/offline presence labels.
+    - Styling added in `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css` for target highlighting and presence indicators.
+  - Added target chip markup to `/Users/ahmadsammour/Documents/Ahmads Prject/admin.html`.
+  - Cache-bust bumped project-wide to `styles.css?v=20260216l` and `app.js?v=20260216l`.
+- Friends hub + compare/messaging update:
+  - Added new `/Users/ahmadsammour/Documents/Ahmads Prject/friends.html` page with:
+    - Friends list, incoming/outgoing requests, discover players.
+    - Your stats summary (XP/TM$/streak/rank + presence).
+    - Search + refresh controls.
+  - Added friends backend in `/Users/ahmadsammour/Documents/Ahmads Prject/code.gs`:
+    - New actions: `getFriendsDashboard`, `sendFriendRequest`, `respondFriendRequest`, `removeFriend`.
+    - New sheet: `TM Arcade Friends` with auto-header setup.
+    - Added helpers for friend parsing/status/pairing and dashboard serialization.
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`:
+    - Friends page state/render/action handlers (request/accept/decline/cancel/remove).
+    - Compare stats text vs current user and quick actions (`Message`, `Challenge`).
+    - Added global friends nav injector (`🤝 Friends`) and page init wiring.
+    - Added message preselect from URL (`messages.html?to=...&draft=...`) so quick-message from Friends opens the right chat.
+    - Added `friends.html` to core download bundle list.
+  - Added Friends styles in `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css` for glass panels, cards, presence tags, and responsive layout.
+  - Cache-bust bumped project-wide to `styles.css?v=20260216m` and `app.js?v=20260216m`.
+- TM Cash App + friend TM$ transfer update:
+  - Added backend transfer system in `/Users/ahmadsammour/Documents/Ahmads Prject/code.gs`:
+    - New actions: `sendTmTransfer`, `getTmTransfers`.
+    - Friend-only transfer validation (accepted friends only).
+    - Atomic balance updates for sender/receiver with script lock.
+    - New sheet support: `TM Arcade Transfers` with auto-header setup and history parsing.
+  - Added new page `/Users/ahmadsammour/Documents/Ahmads Prject/tmcash.html`:
+    - Send TM$ form (recipient, amount, optional note), friend quick-select chips, and recent transfer history.
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`:
+    - Added TM Cash page logic, adaptive low-overhead polling, and status handling.
+    - Added `💸 TM Cash` nav injection/order/page mapping.
+    - Added quick `Send TM$` action in Friends cards that deep-links to TM Cash with prefilled recipient.
+    - Added `tmcash.html` to core download bundle list.
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css` with TM Cash glass UI styling.
+  - Cache-bust bumped project-wide to `styles.css?v=20260216n` and `app.js?v=20260216n`.
+- TM Cash performance polish + cache refresh:
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`:
+    - Added in-flight request dedupe for TM Cash sync (`tmCashFetchInFlight`) to prevent overlapping fetches.
+    - Added short silent-refresh cooldown to cut duplicate background network calls.
+    - Reduced transfer history fetch size to 48 entries for lighter payloads.
+    - Forced post-send sync refresh to keep balances/history instantly correct.
+  - Cache-bust bumped project-wide to `styles.css?v=20260216o` and `app.js?v=20260216o`.
+- Push Reward Buttons "Send To All" upgrade:
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/code.gs`:
+    - `adminCreateScreenReward` now accepts send-to-all scope (`sendToAll` / `targetScope: all` / `targetUsername: all` aliases).
+    - For send-to-all, creates reward rows for all active accounts in one request and returns `sentCount`.
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/admin.html`:
+    - Added `Send to all players` toggle in the Push Reward Buttons card.
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`:
+    - Added send-to-all target detection and payload wiring.
+    - Added clearer status/toast text for single-target vs all-player sends.
+    - Synced checkbox behavior with typed target aliases (`all`, `@all`, `everyone`, `*`).
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css` with glass-styled toggle chip for the new control.
+  - Cache-bust bumped project-wide to `styles.css?v=20260216p` and `app.js?v=20260216p`.
+- Admin account management search:
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/admin.html`:
+    - Added account search input + clear button in the Account Management card.
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`:
+    - Added cached account list filtering for Admin table with live search.
+    - Search matches username, display name, role, rank, and online/offline status.
+    - Search updates table instantly without extra API calls.
+  - Cache-bust bumped project-wide to `styles.css?v=20260216q` and `app.js?v=20260216q`.
+- Advanced rewards removal + friend-only shop gifting:
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/admin.html`:
+    - Removed the Advanced Rewards target card UI.
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/shop.html`:
+    - Added a friend gifting bar (`Gift To Friend`) and friend quick-select chips in the shop controls.
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css`:
+    - Added shop gifting glass styles for the new gifting controls.
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/code.gs`:
+    - Added `sendShopGift` and `getShopGiftState` actions.
+    - Added `TM Arcade Shop Gifts` sheet setup/parsing and friend-only gift validation.
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`:
+    - Added shop gift state sync, gift send flow, and gifted item unlock merge.
+    - Locked gifting UI to accepted friends only.
+    - Pointed frontend auth API to the current Apps Script URL (`AKfycbyZMuHXSgCTKWueC2U0gxaL1y43IwKE5s-3AGAv56r-civ0niUHKJHaT6IXgfxcDXRzvw`).
+    - Routed admin grant status fallback to account status now that the old target card is removed.
+  - Cache-bust bumped project-wide to `styles.css?v=20260216r` and `app.js?v=20260216r`.
+- Shop gift button reliability fix:
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`:
+    - Auto-selects the first accepted friend in Shop gifting when no target is selected.
+    - Resolves typed friend target by username or display name.
+    - Falls back to `getFriendsDashboard` friend data if `getShopGiftState` is unavailable.
+    - Prevents false "disabled" gift states caused by stale/empty friend cache.
+  - Cache-bust bumped project-wide to `styles.css?v=20260216s` and `app.js?v=20260216s`.
+- Gifting removed from shop:
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/shop.html`:
+    - Removed the gifting controls bar and friend chip area from the shop page.
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`:
+    - Removed gift button rendering from shop cards.
+    - Removed gift click handlers and gift-only shop listeners.
+    - Removed background `syncShopGiftUnlocks` trigger calls from auth refresh and visibility refresh.
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/code.gs`:
+    - Disabled `sendShopGift` and `getShopGiftState` in `doPost` action routing.
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css`:
+    - Removed shop gifting style blocks (`.shop-gift-*`).
+  - Cache-bust bumped project-wide to `styles.css?v=20260216u` and `app.js?v=20260216u`.
+- Messaging alignment + smoothness polish:
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css`:
+    - Outgoing DM bubbles now align right; incoming remain left.
+    - Added smooth thread scrolling and subtle new-message bubble animation.
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`:
+    - Improved DM thread render behavior to avoid jumpy scrolling.
+    - Auto-sticks to bottom smoothly when appropriate (especially after sending).
+    - Tracks and animates only the newest newly-rendered message bubble.
+  - Cache-bust bumped project-wide to `styles.css?v=20260216v` and `app.js?v=20260216v`.
+- Weekly leaderboard tournaments + TM$ payouts:
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/code.gs`:
+    - Added weekly tournament processing with one-time weekly payout locking.
+    - Added payout prizes: `#1 = 1000 TM$`, `#2 = 500 TM$`, `#3 = 100 TM$`.
+    - Added tournament ledger sheet support: `TM Arcade Weekly Tournaments`.
+    - Extended `getLeaderboard` response with tournament week window, prizes, and winners.
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/leaderboard.html`:
+    - Added a Weekly Tournament glass panel showing prize amounts and winners.
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/app.js`:
+    - Added tournament response normalization/rendering in leaderboard UI.
+    - Added week range + winner display in leaderboard page.
+  - Updated `/Users/ahmadsammour/Documents/Ahmads Prject/styles.css`:
+    - Added tournament panel styling to match leaderboard theme.
+  - Cache-bust bumped project-wide to `styles.css?v=20260216w` and `app.js?v=20260216w`.

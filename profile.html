@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title data-i18n-title="title_profile">TM Arcade V2 | Profile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syncopate:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css?v=20260217p" />
+  </head>
+  <body data-page="profile">
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-orb orb-a" aria-hidden="true"></div>
+    <div class="bg-orb orb-b" aria-hidden="true"></div>
+
+    <nav class="top-bar">
+      <div class="top-inner">
+        <div class="brand">TM Arcade V2</div>
+        <div class="top-links">
+          <a class="nav-link" href="index.html" data-i18n="nav_home">Home Screen</a>
+          <a class="nav-link" href="games.html" data-i18n="nav_games">All Games</a>
+          <a class="nav-link" href="favorites.html" data-i18n="nav_favorites">Favorites</a>
+          <a class="nav-link" href="bank.html" data-i18n="nav_bank">Bank</a>
+          <a class="nav-link" href="shop.html" data-i18n="nav_shop">Shop</a>
+          <a class="nav-link" href="settings.html" data-i18n="nav_settings">Settings</a>
+          <a class="nav-link" href="about.html" data-i18n="nav_about">About</a>
+          <a class="nav-link active profile-nav-link" href="profile.html" data-i18n="nav_profile">Profile</a>
+        </div>
+        <div class="user-tag" id="profile-player-name" data-user-name>Player</div>
+        <button class="pill emergency" id="emergency" data-i18n="emergency">Emergency</button>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div class="hero-shell">
+        <div class="hero-label">Player Profile</div>
+        <h1>Your Gaming OS Profile</h1>
+        <p>Premium local analytics for your play history, progression, and achievements.</p>
+        <div class="hero-actions">
+          <a class="pill ghost link-pill" href="games.html" data-i18n="nav_games">All Games</a>
+          <a class="pill ghost link-pill" href="settings.html" data-i18n="nav_settings">Settings</a>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <span class="stat-label">Total Playtime</span>
+            <span class="stat-value" id="profile-total-playtime">0m</span>
+          </div>
+          <div>
+            <span class="stat-label">Games Played</span>
+            <span class="stat-value" id="profile-games-played">0</span>
+          </div>
+          <div>
+            <span class="stat-label">Today</span>
+            <span class="stat-value" id="profile-today-playtime">0m</span>
+          </div>
+          <div>
+            <span class="stat-label">Total Launches</span>
+            <span class="stat-value" id="profile-total-launches">0</span>
+          </div>
+          <div>
+            <span class="stat-label">Games Tracked</span>
+            <span class="stat-value" id="profile-games-tracked">0</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-shell">
+      <div class="section-header">
+        <h2>Performance Dashboard</h2>
+        <p>All data is computed from localStorage and updates in real time.</p>
+      </div>
+      <section class="system-panel profile-insights-grid" aria-label="Profile stats">
+        <div class="system-card profile-rank-card">
+          <h3>Rank Progress by Playtime</h3>
+          <div class="profile-rank-wrap">
+            <svg class="profile-rank-ring" viewBox="0 0 120 120" aria-hidden="true">
+              <circle class="profile-rank-track" cx="60" cy="60" r="54"></circle>
+              <circle class="profile-rank-fill" id="profile-rank-ring" cx="60" cy="60" r="54"></circle>
+            </svg>
+            <div class="profile-rank-center">
+              <span class="profile-rank-percent" id="profile-rank-progress-label">0%</span>
+              <span class="profile-rank-label" id="profile-rank-label">Rookie</span>
+            </div>
+          </div>
+          <p class="profile-rank-next" id="profile-next-rank">Next: Hooper</p>
+          <p class="profile-rank-meta" id="profile-rank-playtime">Lifetime: 0m</p>
+        </div>
+        <div class="system-card profile-highlight-card">
+          <h3>Most Played Game</h3>
+          <p class="profile-most-played-name" id="profile-most-played-name">No game data yet</p>
+          <div class="profile-most-played-meta">
+            <span id="profile-most-played-minutes">0m</span>
+            <span id="profile-most-played-launches">0 launches</span>
+          </div>
+          <p class="setting-help" id="profile-most-played-last">Play a game to populate stats.</p>
+        </div>
+        <div class="system-card profile-stat-card">
+          <h3>Average Session</h3>
+          <p class="profile-stat-value" id="profile-average-session">0m</p>
+          <p class="setting-help">Computed from total playtime and launches.</p>
+        </div>
+        <div class="system-card profile-stat-card">
+          <h3>Total Launches</h3>
+          <p class="profile-stat-value" id="profile-total-launches-card">0</p>
+          <p class="setting-help">Every play and app launch is counted.</p>
+        </div>
+        <div class="system-card profile-achievements-card">
+          <div class="setting-row">
+            <h3>Achievement Showcase</h3>
+            <span class="setting-status" id="profile-achievement-count">0 unlocked</span>
+          </div>
+          <div class="profile-achievement-grid" id="profile-achievement-showcase"></div>
+        </div>
+        <div class="system-card">
+          <h3>Core Stats</h3>
+          <div class="setting-row">
+            <span class="setting-metric">XP</span>
+            <span class="setting-metric" id="profile-xp-total">0</span>
+          </div>
+          <div class="setting-row">
+            <span class="setting-metric">Rank</span>
+            <span class="setting-metric" id="profile-rank-name">Rookie</span>
+          </div>
+          <div class="setting-row">
+            <span class="setting-metric">TM Dollars</span>
+            <span class="setting-metric" id="profile-money-total">0</span>
+          </div>
+          <div class="setting-row">
+            <span class="setting-metric">Favorites</span>
+            <span class="setting-metric" id="profile-favorites-total">0</span>
+          </div>
+          <div class="setting-row">
+            <span class="setting-metric">Hub Session Time</span>
+            <span class="setting-metric" id="profile-session-time">0m</span>
+          </div>
+        </div>
+      </section>
+      <section class="system-panel" aria-label="Profile game stats">
+        <div class="system-card profile-games-card">
+          <h3>Per-Game Playtime</h3>
+          <p class="setting-help">Minutes played and launches for each game.</p>
+          <div class="profile-games-table-wrap">
+            <table class="profile-games-table">
+              <thead>
+                <tr>
+                  <th>Game</th>
+                  <th>Minutes</th>
+                  <th>Launches</th>
+                  <th>Last Played</th>
+                </tr>
+              </thead>
+              <tbody id="profile-games-list"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span data-i18n="footer_credit">TM Arcade V2 by Ahmad Abu Sammour.</span>
+    </footer>
+
+    <script src="app.js?v=20260217u"></script>
+  </body>
+</html>

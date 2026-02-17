@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title data-i18n-title="title_shop">TM Arcade V2 | Shop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syncopate:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css?v=20260217p" />
+  </head>
+  <body data-page="shop">
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-orb orb-a" aria-hidden="true"></div>
+    <div class="bg-orb orb-b" aria-hidden="true"></div>
+
+    <nav class="top-bar">
+      <div class="top-inner">
+        <div class="brand">TM Arcade V2</div>
+        <div class="top-links">
+          <a class="nav-link" href="index.html" data-i18n="nav_home">Home Screen</a>
+          <a class="nav-link" href="games.html" data-i18n="nav_games">All Games</a>
+          <a class="nav-link" href="favorites.html" data-i18n="nav_favorites">Favorites</a>
+          <a class="nav-link" href="bank.html" data-i18n="nav_bank">Bank</a>
+          <a class="nav-link active" href="shop.html" data-i18n="nav_shop">Shop</a>
+          <a class="nav-link" href="settings.html" data-i18n="nav_settings">Settings</a>
+          <a class="nav-link" href="about.html" data-i18n="nav_about">About</a>
+        </div>
+        <div class="user-tag" data-user-name>Player</div>
+        <button class="pill emergency" id="emergency" data-i18n="emergency">Emergency</button>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div class="hero-shell">
+        <div class="hero-label" data-i18n="shop_label">Shop</div>
+        <h1 data-i18n="shop_title">TM Shop</h1>
+        <p data-i18n="shop_desc">Spend TM Dollars on cosmetics, titles, and premium themes.</p>
+        <div class="hero-actions">
+          <a class="pill ghost link-pill" href="bank.html" data-i18n="nav_bank">Bank</a>
+          <a class="pill ghost link-pill" href="index.html" data-i18n="back_home">Back to Home</a>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <span class="stat-label" data-i18n="total_xp">Total XP</span>
+            <span class="stat-value" data-xp-total>0</span>
+          </div>
+          <div>
+            <span class="stat-label" data-i18n="tm_dollars">TM Dollars</span>
+            <span class="stat-value" data-tm-total>0</span>
+          </div>
+          <div>
+            <span class="stat-label" data-i18n="shop_wallet_hint">Wallet</span>
+            <span class="stat-value">Spend wisely</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-shell">
+      <div class="shop-controls">
+        <div class="search-wrap shop-search">
+          <input
+            class="search-input"
+            id="shop-search"
+            type="search"
+            data-i18n-placeholder="shop_search_placeholder"
+            placeholder="Search shop..."
+            autocomplete="off"
+          />
+          <select class="glass-select" id="shop-category" aria-label="Filter by category">
+            <option value="all" data-i18n="shop_category_all">All Categories</option>
+          </select>
+          <button class="pill ghost filter-pill" id="shop-filter-favorites" type="button" data-i18n="shop_filter_favorites">
+            Favorites
+          </button>
+          <button class="pill ghost filter-pill" id="shop-filter-wishlist" type="button" data-i18n="shop_filter_wishlist">
+            Wishlist
+          </button>
+        </div>
+      </div>
+      <section class="shop-panel">
+        <div class="shop-sections" id="shop-sections">
+          <!-- Shop sections injected by app.js -->
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span data-i18n="footer_credit">TM Arcade V2 by Ahmad Abu Sammour.</span>
+    </footer>
+
+    <script src="app.js?v=20260217u"></script>
+  </body>
+</html>

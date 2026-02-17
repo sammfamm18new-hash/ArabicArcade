@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title data-i18n-title="title_home">TM Arcade V2 by Ahmad Abu Sammour</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syncopate:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css?v=20260217p" />
+  </head>
+  <body data-page="popular">
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-orb orb-a" aria-hidden="true"></div>
+    <div class="bg-orb orb-b" aria-hidden="true"></div>
+
+    <nav class="top-bar">
+      <div class="top-inner">
+        <div class="brand">TM Arcade V2</div>
+        <div class="top-links">
+          <a class="nav-link active" href="index.html" data-i18n="nav_home">Home Screen</a>
+          <a class="nav-link" href="games.html" data-i18n="nav_games">All Games</a>
+          <a class="nav-link" href="favorites.html" data-i18n="nav_favorites">Favorites</a>
+          <a class="nav-link" href="bank.html" data-i18n="nav_bank">Bank</a>
+          <a class="nav-link" href="shop.html" data-i18n="nav_shop">Shop</a>
+          <a class="nav-link" href="settings.html" data-i18n="nav_settings">Settings</a>
+          <a class="nav-link" href="about.html" data-i18n="nav_about">About</a>
+        </div>
+        <div class="user-tag" data-user-name>Player</div>
+        <button class="pill emergency" id="emergency" data-i18n="emergency">Emergency!!!</button>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div class="hero-shell">
+        <div class="hero-label" data-i18n="home_label">Home Screen</div>
+        <div class="hero-welcome">
+          <span data-i18n="welcome">Welcome</span>, <span class="hero-welcome-name" data-user-name>Player</span>
+        </div>
+        <div class="hero-title-row">
+          <h1>TM Arcade V2</h1>
+          <div class="hero-countdown" id="school-countdown" aria-live="polite"></div>
+        </div>
+        <p data-i18n="home_tagline">
+          A clean, high‑tech launchpad. Pick a game to open its dedicated play page.
+        </p>
+        <div class="hero-note">Welcome My Favorite Gamer!</div>
+        <div class="hero-feature" id="daily-game">
+          <div class="hero-feature-label">
+            <span data-i18n="daily_game">🔥 Daily Game</span>
+            <span class="hero-feature-badge" data-i18n="daily_badge">Surprise Pick</span>
+          </div>
+          <div class="hero-feature-body">
+            <div>
+              <h2 id="daily-game-name">Mystery Game</h2>
+              <p id="daily-game-desc" data-i18n="daily_game_desc">
+                Tap reveal to unlock today's surprise.
+              </p>
+            </div>
+            <div class="hero-feature-actions">
+              <button
+                class="pill reveal-pill"
+                id="daily-game-reveal"
+                type="button"
+                data-i18n="tap_reveal"
+              >
+                Tap to Reveal
+              </button>
+              <a class="pill hidden" id="daily-game-play" href="games.html" data-i18n="play_now">
+                Play Now
+              </a>
+              <a class="pill ghost link-pill" href="games.html" data-i18n="see_all_games">See All Games</a>
+            </div>
+          </div>
+        </div>
+        <div class="hero-actions">
+          <button class="pill" id="launch-random" data-i18n="launch_random">Launch Random</button>
+          <a class="pill ghost link-pill" href="games.html" data-i18n="view_all_games">View All Games</a>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <span class="stat-label" data-i18n="stats_games_ready">Games Ready</span>
+            <span class="stat-value" id="game-count">4</span>
+          </div>
+          <div>
+            <span class="stat-label" data-i18n="stats_current_node">Current Node</span>
+            <span class="stat-value" id="current-node">SLOPE</span>
+          </div>
+          <div>
+            <span class="stat-label" data-i18n="stats_signal">Signal</span>
+            <span class="stat-value" data-i18n="signal_stable">Stable</span>
+          </div>
+        </div>
+        <div class="xp-row">
+          <div class="xp-panel" aria-label="XP progress">
+            <div class="xp-header">
+              <span class="xp-rank" data-rank-name>Rookie</span>
+              <span class="xp-total"><span data-xp-total>0</span> XP</span>
+            </div>
+            <div class="xp-bar">
+              <div class="xp-fill" id="xp-fill"></div>
+            </div>
+            <div class="xp-meta">
+              <span id="xp-next">Next: Hooper</span>
+              <span id="xp-progress">0%</span>
+            </div>
+            <div class="xp-meta">
+              <span id="xp-streak">Streak: 0 days</span>
+              <span id="xp-boost">Boost: x1</span>
+            </div>
+            <div class="xp-meta">
+              <span id="xp-style">Style: Grinder</span>
+            </div>
+            <div class="xp-tooltip" id="xp-tooltip" aria-hidden="true"></div>
+          </div>
+          <div class="xp-code-panel" aria-label="Redeem XP code">
+            <div class="xp-code-title">XP Codes</div>
+            <p class="xp-code-desc">Enter a code to claim bonus XP.</p>
+            <div class="xp-code-row">
+              <input class="xp-code-input" id="xp-code-input" type="text" placeholder="Enter code" />
+              <button class="pill small" id="xp-code-claim" type="button">Redeem</button>
+            </div>
+            <span class="xp-code-status" id="xp-code-status"></span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-shell">
+      <section class="home-block" data-home-section="favorites">
+        <div class="section-header">
+          <h2 data-i18n="favorites_title">Favorites</h2>
+          <p data-i18n="favorites_desc">Your top picks, ready to launch.</p>
+        </div>
+        <div class="search-wrap">
+          <input
+            class="search-input"
+            id="search-games"
+            type="search"
+            data-i18n-placeholder="search_games"
+            placeholder="Search games..."
+            autocomplete="off"
+          />
+          <button class="pill ghost filter-pill" id="filter-favorites" type="button" data-i18n="favorites_filter">
+            Favorites
+          </button>
+        </div>
+        <section class="game-grid" id="game-grid" aria-label="Favorite games">
+          <!-- Cards injected by app.js -->
+        </section>
+        <div class="empty-state" id="favorites-empty">
+          <span data-i18n="favorites_empty">No favorites yet.</span>
+          <a class="pill ghost link-pill" href="games.html" data-i18n="favorites_add">Add favorites now</a>
+        </div>
+      </section>
+
+      <section class="home-block" data-home-section="recents" id="recent-section">
+        <div class="section-header">
+          <h2 data-i18n="recent_title">Recently Played</h2>
+          <p data-i18n="recent_desc">Quick resume from your last sessions.</p>
+        </div>
+        <section class="game-grid" id="recent-grid" aria-label="Recently played games">
+          <!-- Recent cards injected by app.js -->
+        </section>
+      </section>
+
+      <section class="home-block" data-home-section="apps">
+        <div class="section-header section-header-row">
+          <div>
+            <h2 data-i18n="apps_title">Apps</h2>
+            <p data-i18n="apps_desc">Quick access to your most‑used tools.</p>
+          </div>
+          <div class="section-header-actions">
+            <button class="pill ghost small" id="reset-apps-order" type="button">Reset Order</button>
+            <button class="pill ghost small" id="create-app" type="button">Create</button>
+          </div>
+        </div>
+        <section class="app-grid" aria-label="Apps">
+          <a
+            class="app-card"
+            href="https://chatgpt.com/"
+            target="_blank"
+            rel="noopener"
+            data-app-id="chatgpt"
+            draggable="true"
+          >
+            <span class="app-icon">GPT</span>
+            <div>
+              <h3>ChatGPT</h3>
+              <p data-i18n="app_chatgpt_desc">Ask, draft, and explore ideas fast.</p>
+            </div>
+          </a>
+          <a
+            class="app-card"
+            href="https://classroom.google.com/"
+            target="_blank"
+            rel="noopener"
+            data-app-id="classroom"
+            draggable="true"
+          >
+          <span class="app-icon">CL</span>
+          <div>
+            <h3>Google Classroom</h3>
+            <p data-i18n="app_classroom_desc">Assignments, announcements, and classes.</p>
+          </div>
+        </a>
+        <a
+          class="app-card"
+          href="https://drive.google.com/"
+          target="_blank"
+          rel="noopener"
+          data-app-id="drive"
+          draggable="true"
+        >
+          <span class="app-icon">DR</span>
+          <div>
+            <h3>Google Drive</h3>
+            <p data-i18n="app_drive_desc">Store, share, and organize files.</p>
+          </div>
+        </a>
+        <a
+          class="app-card"
+          href="https://docs.google.com/"
+          target="_blank"
+          rel="noopener"
+          data-app-id="docs"
+          draggable="true"
+        >
+          <span class="app-icon">DC</span>
+          <div>
+            <h3>Google Docs</h3>
+            <p data-i18n="app_docs_desc">Create and edit documents.</p>
+          </div>
+        </a>
+        <a
+          class="app-card"
+          href="https://slides.google.com/"
+          target="_blank"
+          rel="noopener"
+          data-app-id="slides"
+          draggable="true"
+        >
+          <span class="app-icon">SL</span>
+          <div>
+            <h3>Google Slides</h3>
+            <p data-i18n="app_slides_desc">Build presentations quickly.</p>
+          </div>
+        </a>
+        <a
+          class="app-card"
+          href="https://mail.google.com/"
+          target="_blank"
+          rel="noopener"
+          data-app-id="gmail"
+          draggable="true"
+        >
+          <span class="app-icon">GM</span>
+          <div>
+            <h3>Gmail</h3>
+            <p data-i18n="app_gmail_desc">Manage your inbox on the fly.</p>
+          </div>
+        </a>
+        <a
+          class="app-card"
+          href="https://clever.com/"
+          target="_blank"
+          rel="noopener"
+          data-app-id="clever"
+          draggable="true"
+        >
+          <span class="app-icon">CV</span>
+          <div>
+            <h3>Clever</h3>
+            <p data-i18n="app_clever_desc">Single sign‑on for school tools.</p>
+          </div>
+        </a>
+        <a
+          class="app-card"
+          href="https://www.duolingo.com/"
+          target="_blank"
+          rel="noopener"
+          data-app-id="duolingo"
+          draggable="true"
+        >
+          <span class="app-icon">DL</span>
+          <div>
+            <h3>Duolingo</h3>
+            <p data-i18n="app_duolingo_desc">Daily language practice sessions.</p>
+          </div>
+        </a>
+        </section>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span data-i18n="footer_credit">TM Arcade V2 by Ahmad Abu Sammour.</span>
+    </footer>
+
+    <div class="app-builder" id="app-builder" aria-hidden="true">
+      <div class="app-builder-card">
+        <h2>Create App</h2>
+        <p>Add a title, description, and link. Apps open in a new tab.</p>
+        <form class="app-builder-form" id="app-builder-form">
+          <input
+            class="app-input"
+            id="app-title-input"
+            type="text"
+            maxlength="32"
+            placeholder="App title"
+            required
+          />
+          <textarea
+            class="app-input app-textarea"
+            id="app-desc-input"
+            maxlength="120"
+            placeholder="Short description"
+          ></textarea>
+          <input
+            class="app-input"
+            id="app-link-input"
+            type="url"
+            placeholder="https://example.com"
+            required
+          />
+          <div class="app-builder-actions">
+            <button class="pill ghost small" id="app-builder-cancel" type="button">Cancel</button>
+            <button class="pill small" type="submit">Add App</button>
+          </div>
+        </form>
+        <div class="app-builder-error" id="app-builder-error" role="alert"></div>
+      </div>
+    </div>
+
+    <script src="app.js?v=20260217u"></script>
+  </body>
+</html>

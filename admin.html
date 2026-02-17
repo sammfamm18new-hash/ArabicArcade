@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TM Arcade V2 | Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syncopate:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css?v=20260217p" />
+  </head>
+  <body data-page="admin">
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-orb orb-a" aria-hidden="true"></div>
+    <div class="bg-orb orb-b" aria-hidden="true"></div>
+
+    <nav class="top-bar">
+      <div class="top-inner">
+        <div class="brand">TM Arcade V2</div>
+        <div class="top-links">
+          <a class="nav-link" href="index.html" data-i18n="nav_home">Home Screen</a>
+          <a class="nav-link" href="games.html" data-i18n="nav_games">All Games</a>
+          <a class="nav-link" href="favorites.html" data-i18n="nav_favorites">Favorites</a>
+          <a class="nav-link" href="bank.html" data-i18n="nav_bank">Bank</a>
+          <a class="nav-link" href="shop.html" data-i18n="nav_shop">Shop</a>
+          <a class="nav-link" href="settings.html" data-i18n="nav_settings">Settings</a>
+          <a class="nav-link" href="about.html" data-i18n="nav_about">About</a>
+        </div>
+        <div class="user-tag" data-user-name>Player</div>
+        <button class="pill emergency" id="emergency" type="button" data-i18n="emergency">Emergency</button>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div class="hero-shell">
+        <div class="hero-label">Admin</div>
+        <h1>Admin Controls</h1>
+        <p>Account tools + runtime controls for XP, money, mini-events, and appearance.</p>
+        <div class="hero-stats">
+          <div>
+            <span class="stat-label">Status</span>
+            <span class="stat-value" id="admin-status">Checking...</span>
+          </div>
+          <div>
+            <span class="stat-label">Session</span>
+            <span class="stat-value" id="admin-meta">Loading</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-shell admin-shell">
+      <section class="admin-gate" id="admin-gate" hidden>
+        <h2>Admin access is required.</h2>
+        <p>Log in with an admin account to open this page.</p>
+        <a class="pill ghost link-pill" href="index.html">Back to Home</a>
+      </section>
+
+      <section id="admin-shell" hidden>
+        <div class="admin-grid">
+          <article class="admin-card admin-card-wide admin-card-banner">
+            <div class="admin-card-banner-head">
+              <h3>Server-Wide Banner</h3>
+              <span class="admin-scope-pill is-server">SERVER-WIDE</span>
+            </div>
+            <p class="admin-meta">
+              Banner text is saved to backend (Google Sheet) and applied to all users. Colors always follow the active site theme.
+            </p>
+            <div class="admin-row">
+              <input
+                class="setting-input"
+                id="admin-banner-text"
+                type="text"
+                maxlength="120"
+                placeholder="Banner message"
+              />
+            </div>
+            <div class="admin-row">
+              <button class="pill" id="admin-save-banner" type="button">Save Banner Text</button>
+              <button class="pill ghost" id="admin-reset-banner" type="button">Reset Banner to Default</button>
+              <span class="admin-inline-status" id="admin-banner-status"></span>
+            </div>
+          </article>
+
+          <article class="admin-card admin-card-wide">
+            <h3>Account Management</h3>
+            <p class="admin-meta">Use quick grants, parental lock/unlock controls, and direct screen messages per account.</p>
+            <div class="admin-row">
+              <button class="pill small" id="admin-accounts-refresh" type="button">Refresh Accounts</button>
+              <span class="admin-inline-status" id="admin-accounts-status"></span>
+            </div>
+            <div class="admin-row">
+              <input
+                class="setting-input"
+                id="admin-account-search"
+                type="text"
+                maxlength="60"
+                autocomplete="off"
+                placeholder="Search accounts (username, name, role, rank, lock, status)"
+              />
+              <button class="pill ghost small" id="admin-account-search-clear" type="button">Clear</button>
+            </div>
+            <div class="admin-row">
+              <label class="setting-field">
+                <span>Quick XP Amount</span>
+                <input class="setting-input" id="admin-quick-xp-input" type="number" min="1" step="1" value="100" />
+              </label>
+              <label class="setting-field">
+                <span>Quick TM$ Amount</span>
+                <input class="setting-input" id="admin-quick-money-input" type="number" min="1" step="1" value="100" />
+              </label>
+            </div>
+            <div class="admin-row">
+              <label class="setting-field">
+                <span>Lock Minutes</span>
+                <input class="setting-input" id="admin-lock-minutes-input" type="number" min="1" max="10080" step="1" value="30" />
+              </label>
+              <label class="setting-field">
+                <span>Lock Message</span>
+                <input
+                  class="setting-input"
+                  id="admin-lock-message-input"
+                  type="text"
+                  maxlength="160"
+                  placeholder="Take a break and come back later."
+                />
+              </label>
+              <label class="admin-inline-toggle" for="admin-lock-until-unlock">
+                <input id="admin-lock-until-unlock" type="checkbox" />
+                <span>Lock until admin unlocks</span>
+              </label>
+            </div>
+            <div class="admin-table-wrap">
+              <table class="admin-account-table">
+                <thead>
+                  <tr>
+                    <th>Account</th>
+                    <th>Role</th>
+                    <th>Stats</th>
+                    <th>Password</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-account-rows"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="admin-card admin-card-wide">
+            <h3>XP Code Manager</h3>
+            <p class="admin-meta">Create XP redeem codes with due dates, then delete any code instantly.</p>
+            <div class="admin-row">
+              <input
+                class="setting-input"
+                id="admin-xp-code-value"
+                type="text"
+                maxlength="32"
+                autocomplete="off"
+                placeholder="Code (A-Z, 0-9, - or _)"
+              />
+              <input
+                class="setting-input"
+                id="admin-xp-code-amount"
+                type="number"
+                min="1"
+                step="1"
+                value="100"
+                placeholder="XP amount"
+              />
+              <input
+                class="setting-input"
+                id="admin-xp-code-expiry"
+                type="datetime-local"
+              />
+              <button class="pill small" id="admin-xp-code-create" type="button">Create Code</button>
+            </div>
+            <div class="admin-row">
+              <button class="pill ghost small" id="admin-xp-code-refresh" type="button">Refresh Codes</button>
+              <span class="admin-inline-status" id="admin-xp-code-status"></span>
+            </div>
+            <div class="admin-table-wrap">
+              <table class="admin-xpcode-table">
+                <thead>
+                  <tr>
+                    <th>Code</th>
+                    <th>XP</th>
+                    <th>Due</th>
+                    <th>Claims</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-xp-code-rows"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="admin-card admin-card-wide">
+            <h3>Push Reward Buttons</h3>
+            <p class="admin-meta">Send a clickable reward button to one player or all players.</p>
+            <div class="admin-row">
+              <input
+                class="setting-input"
+                id="admin-screen-target"
+                type="text"
+                maxlength="24"
+                placeholder="Target username (example: player123) or all"
+              />
+              <input
+                class="setting-input"
+                id="admin-screen-label"
+                type="text"
+                maxlength="40"
+                placeholder="Button label (example: Claim Admin Reward)"
+              />
+            </div>
+            <div class="admin-row">
+              <label class="admin-inline-toggle" for="admin-screen-target-all">
+                <input id="admin-screen-target-all" type="checkbox" />
+                <span>Send to all players</span>
+              </label>
+            </div>
+            <div class="admin-row">
+              <input
+                class="setting-input"
+                id="admin-screen-message"
+                type="text"
+                maxlength="120"
+                placeholder="Optional message shown under the button"
+              />
+            </div>
+            <div class="admin-row">
+              <label class="setting-field">
+                <span>XP</span>
+                <input class="setting-input" id="admin-screen-xp" type="number" min="0" step="1" value="100" />
+              </label>
+              <label class="setting-field">
+                <span>TM$</span>
+                <input class="setting-input" id="admin-screen-money" type="number" min="0" step="1" value="100" />
+              </label>
+              <label class="setting-field">
+                <span>Streak</span>
+                <input class="setting-input" id="admin-screen-streak" type="number" min="0" step="1" value="0" />
+              </label>
+              <label class="setting-field">
+                <span>Rank (optional)</span>
+                <input
+                  class="setting-input"
+                  id="admin-screen-rank"
+                  type="text"
+                  maxlength="40"
+                  placeholder="Optional rank override"
+                />
+              </label>
+              <label class="setting-field">
+                <span>Expires (minutes)</span>
+                <input class="setting-input" id="admin-screen-expiry" type="number" min="1" step="1" value="180" />
+              </label>
+            </div>
+            <div class="admin-row">
+              <button class="pill small" id="admin-screen-send" type="button">Send Button To Screen</button>
+              <span class="admin-inline-status" id="admin-screen-status"></span>
+            </div>
+          </article>
+
+          <article class="admin-card">
+            <h3>XP Controls (Target)</h3>
+            <div class="admin-row">
+              <input class="setting-input" id="admin-xp-input" type="number" min="0" step="1" value="100" />
+            </div>
+            <div class="admin-row">
+              <button class="pill small" type="button" data-admin-type="xp" data-admin-economy="add">Add XP</button>
+              <button class="pill ghost small" type="button" data-admin-type="xp" data-admin-economy="remove">
+                Remove XP
+              </button>
+              <button class="pill ghost small" type="button" data-admin-type="xp" data-admin-economy="set">Set XP</button>
+            </div>
+          </article>
+
+          <article class="admin-card">
+            <h3>Money Controls (Target)</h3>
+            <div class="admin-row">
+              <input class="setting-input" id="admin-money-input" type="number" min="0" step="1" value="100" />
+            </div>
+            <div class="admin-row">
+              <button class="pill small" type="button" data-admin-type="money" data-admin-economy="add">Add TM$</button>
+              <button class="pill ghost small" type="button" data-admin-type="money" data-admin-economy="remove">
+                Remove TM$
+              </button>
+              <button class="pill ghost small" type="button" data-admin-type="money" data-admin-economy="set">Set TM$</button>
+            </div>
+          </article>
+
+          <article class="admin-card">
+            <h3>Streak Controls (Target)</h3>
+            <div class="admin-row">
+              <input class="setting-input" id="admin-streak-input" type="number" min="0" step="1" value="1" />
+            </div>
+            <div class="admin-row">
+              <button class="pill small" type="button" data-admin-type="streak" data-admin-economy="add">Add Streak</button>
+              <button class="pill ghost small" type="button" data-admin-type="streak" data-admin-economy="remove">
+                Remove Streak
+              </button>
+              <button class="pill ghost small" type="button" data-admin-type="streak" data-admin-economy="set">
+                Set Streak
+              </button>
+            </div>
+          </article>
+
+          <article class="admin-card">
+            <h3>Rank Controls (Target)</h3>
+            <div class="admin-row">
+              <input
+                class="setting-input"
+                id="admin-rank-input"
+                type="text"
+                maxlength="40"
+                placeholder="Rank title (example: Legend)"
+              />
+            </div>
+            <div class="admin-row">
+              <button class="pill small" type="button" data-admin-type="rank" data-admin-economy="set">Set Rank</button>
+            </div>
+          </article>
+
+          <article class="admin-card">
+            <h3>Session</h3>
+            <p class="admin-meta">Reset local session time, streak, and XP progress timer.</p>
+            <div class="admin-row">
+              <button class="pill" id="admin-reset-session" type="button">Reset Session Stats</button>
+            </div>
+            <div class="admin-row">
+              <button class="pill ghost" id="admin-lock" type="button">Lock Admin</button>
+            </div>
+          </article>
+
+          <article class="admin-card">
+            <h3>Runtime Toggles</h3>
+            <div class="admin-row">
+              <button class="pill" id="admin-toggle-god" type="button">God Mode: Off</button>
+            </div>
+            <div class="admin-row">
+              <button class="pill" id="admin-toggle-mini" type="button">Mini-events: On</button>
+            </div>
+            <div class="admin-row">
+              <button class="pill" id="admin-toggle-school" type="button">School Mode: Off</button>
+            </div>
+            <div class="admin-row">
+              <button class="pill" id="admin-toggle-debug" type="button">Debug Preview: Off</button>
+            </div>
+            <div class="admin-row">
+              <button class="pill" id="admin-toggle-multiplier" type="button">Local Multiplier: x1</button>
+            </div>
+          </article>
+
+          <article class="admin-card optional">
+            <h3>Nerf Overrides</h3>
+            <p class="admin-meta">Default passive rates: 2.5 XP/min and 0.75 TM$/min.</p>
+            <div class="admin-row">
+              <label class="setting-field">
+                <span>Passive XP/min</span>
+                <input class="setting-input" id="admin-passive-xp" type="number" min="0" max="12" step="0.1" />
+              </label>
+              <label class="setting-field">
+                <span>Passive TM$/min</span>
+                <input class="setting-input" id="admin-passive-money" type="number" min="0" max="8" step="0.1" />
+              </label>
+            </div>
+            <div class="admin-row">
+              <button class="pill" id="admin-save-rates" type="button">Save Passive Rates</button>
+            </div>
+          </article>
+
+          <article class="admin-card optional">
+            <h3>Mini-Event Toggles</h3>
+            <div class="admin-row">
+              <button class="pill small" id="admin-toggle-mini-xp" type="button">Mini XP: On</button>
+              <button class="pill small" id="admin-toggle-mini-money" type="button">Mini Money: On</button>
+            </div>
+            <div class="admin-row">
+              <button class="pill small" id="admin-toggle-mini-visuals" type="button">Mini Visuals: On</button>
+              <button class="pill small" id="admin-toggle-sound" type="button">Event Sounds: On</button>
+            </div>
+          </article>
+
+          <article class="admin-card optional">
+            <h3>Visual Events</h3>
+            <div class="admin-row">
+              <button class="pill small" id="admin-trigger-coins" type="button">Coin Burst</button>
+              <button class="pill small" id="admin-trigger-sparks" type="button">Spark Burst</button>
+              <button class="pill small" id="admin-trigger-confetti" type="button">Confetti</button>
+            </div>
+            <div class="admin-row">
+              <button class="pill ghost small" id="admin-trigger-theme" type="button">Theme Shift</button>
+              <button class="pill ghost small" id="admin-trigger-egg" type="button">Easter Egg</button>
+              <button class="pill ghost small" id="admin-max-visual-test" type="button">Max Visual Test</button>
+            </div>
+          </article>
+
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>Admin tools are protected by account roles.</span>
+    </footer>
+
+    <script src="app.js?v=20260217u"></script>
+  </body>
+</html>
